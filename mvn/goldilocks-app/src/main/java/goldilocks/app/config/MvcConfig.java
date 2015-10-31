@@ -26,54 +26,55 @@ import goldilocks.app.web.controller.ControllerCommonModelInterceptor;
 
 @Configuration
 public class MvcConfig extends WebMvcConfigurerAdapter {
-	private static final String[] CLASSPATH_RESOURCE_LOCATIONS = { "classpath:/META-INF/resources/",
-			"classpath:/resources/", "classpath:/static/", "classpath:/public/" };
+    private static final int CACHE_PERIOD_SECONDS = 60 * 60;
 
-	@Autowired
-	private ControllerCommonModelInterceptor modelInterceptor;
+    private static final String[] CLASSPATH_RESOURCE_LOCATIONS = { "classpath:/META-INF/resources/", "classpath:/resources/",
+            "classpath:/static/", "classpath:/public/" };
 
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(new ThymeleafLayoutInterceptor());
-		registry.addWebRequestInterceptor(modelInterceptor);
-	}
+    @Autowired
+    private ControllerCommonModelInterceptor modelInterceptor;
 
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		// TODO these are static content - probably only needed in eclipse...
-		registry.addResourceHandler("/**").addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
-	}
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new ThymeleafLayoutInterceptor());
+        registry.addWebRequestInterceptor(modelInterceptor);
+    }
 
-	@Override
-	public void addViewControllers(ViewControllerRegistry registry) {
-		// set controllers for simple views
-		registry.addViewController("/login").setViewName("login");
-	}
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // static content with caching
+        registry.addResourceHandler("/**").addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS).setCachePeriod(CACHE_PERIOD_SECONDS)
+                .resourceChain(true);
+    }
 
-	@Override
-	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-		Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
-		// LocalDateSerialiser
-		builder.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-		builder.featuresToEnable(MapperFeature.DEFAULT_VIEW_INCLUSION);
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        // set controllers for simple views
+        registry.addViewController("/login").setViewName("login");
+    }
 
-		ObjectMapper objectMapper = builder.build();
-		converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
-	}
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
+        // LocalDateSerialiser
+        builder.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        builder.featuresToEnable(MapperFeature.DEFAULT_VIEW_INCLUSION);
 
-	@Bean
-	public EmbeddedServletContainerCustomizer containerCustomizer() {
-		return new EmbeddedServletContainerCustomizer() {
-			@Override
-			public void customize(ConfigurableEmbeddedServletContainer container) {
+        ObjectMapper objectMapper = builder.build();
+        converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
+    }
 
-				String errorsPath = "/errors";
-				container.addErrorPages(new ErrorPage(HttpStatus.UNAUTHORIZED, errorsPath),
-						new ErrorPage(HttpStatus.FORBIDDEN, errorsPath),
-						new ErrorPage(HttpStatus.NOT_FOUND, errorsPath),
-						new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, errorsPath));
-			}
-		};
-	}
+    @Bean
+    public EmbeddedServletContainerCustomizer containerCustomizer() {
+        return new EmbeddedServletContainerCustomizer() {
+            @Override
+            public void customize(ConfigurableEmbeddedServletContainer container) {
+
+                String errorsPath = "/errors";
+                container.addErrorPages(new ErrorPage(HttpStatus.UNAUTHORIZED, errorsPath), new ErrorPage(HttpStatus.FORBIDDEN, errorsPath),
+                        new ErrorPage(HttpStatus.NOT_FOUND, errorsPath), new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, errorsPath));
+            }
+        };
+    }
 
 }

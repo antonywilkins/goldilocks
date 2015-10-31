@@ -15,7 +15,10 @@
         qn.each([ '/templates/common/alert-notification.html', '/templates/common/confirm-delete.html', '/templates/common/filter.html',
             '/templates/common/paginate.html' ], function(templateId) {
           $http.get(templateId, {
-            cache : $templateCache
+            cache : $templateCache,
+            headers : {
+              'Cache-Control' : 'max-age=3600'
+            }
           });
         });
 
