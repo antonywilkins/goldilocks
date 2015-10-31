@@ -1,0 +1,74 @@
+<div>
+  <h2 ng-show="editModel.existing && editMode" translate="pages.editProduct.editTitle"></h2>
+  <h2 ng-show="editModel.existing && !editMode" translate="pages.editProduct.viewTitle"></h2>
+  <h2 ng-show="!editModel.existing" translate="pages.editProduct.newTitle"></h2>
+
+  <form name="editForm" class="form-vertical" novalidate autocomplete="off" ng-submit>
+
+
+    <div class="row">
+      <div class="col-lg-4">
+        <label class="control-label" translate="types.Product.name"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <input class="form-control" ng-model="editModel.name" id="name" type="text" ng-required="true" min="2" max="40"
+            ng-disabled="!editMode" />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <label class="control-label" translate="types.Product.description"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <input class="form-control" ng-model="editModel.description" id="name" type="text" ng-required="true" min="2" max="180"
+            ng-disabled="!editMode" />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <label class="control-label" translate="types.Product.price"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <input class="form-control" ng-model="editModel.price" id="price" name="price" type="text" money ng-required="true" min="0"
+            ng-disabled="!editMode" />
+        </div>
+      </div>
+      <div class="col-lg-2 msg-block" ng-show="editForm.$error">
+        <span class="msg-error" ng-show="editForm.price.$error.min" translate="messages.product.validation.priceMin"></span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <label class="control-label" translate="types.Product.stock"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <input class="form-control" ng-model="editModel.stock" id="stock" name="stock" type="number" ng-required="true" min="0"
+            ng-disabled="!editMode" />
+        </div>
+      </div>
+      <div class="col-lg-2 msg-block" ng-show="editForm.$error">
+        <span class="msg-error" ng-show="editForm.stock.$error.min" translate="messages.product.validation.stockMin"></span> <span
+          class="msg-error" ng-show="editForm.stock.$error.number" translate="messages.validation.numberFormat"></span>
+      </div>
+    </div>
+
+  </form>
+
+</div>

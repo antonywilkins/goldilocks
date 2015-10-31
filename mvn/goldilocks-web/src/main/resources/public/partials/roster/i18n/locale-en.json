@@ -1,0 +1,30 @@
+{
+	"page":{
+		"title":"{{system}} - Rosters"
+	},
+	"pages":{
+		"listStaffRosters":{
+			"title":"Rosters"
+		},
+		"regularDays":{
+			"title":"{{name}} - Regular Hours"
+		}
+
+	},
+	"types":{
+		"StaffRosterSummary":{
+			"_typeName":"Staff Roster Summary",
+			"regularHours":"Regular Hours",
+			"regularDays":"Regular Days"
+		}
+
+	},
+	"actions":{
+		"regularDays":"Regular Hours",
+		"rosterPeriod":"This Week"
+
+	},
+	"messages":{
+
+	}
+}

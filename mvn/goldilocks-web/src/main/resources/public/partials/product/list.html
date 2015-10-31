@@ -1,0 +1,37 @@
+<div>
+  <h2 translate="pages.listProducts.title"></h2>
+
+  <form name="searchForm" class="form-inline" novalidate autocomplete="off" ng-submit></form>
+
+  <qn-paginate page-model="pageInfo" page-changed="pageChanged()" show-sizer="true"></qn-paginate>
+  <qn-filter filter-model="pageInfo"filter-changed="pageChanged()"></qn-filter>
+
+  <div class="table-responsive col-lg-12">
+    <table class="table table-condensed table-striped table-hover">
+      <thead>
+        <tr>
+          <th class="col-lg-2"><a ng-click="sortBy('name')" translate="types.Product.name"></a></th>
+          <th class="col-lg-3"><a ng-click="sortBy('description')" translate="types.Product.description"></a></th>
+          <th class="col-lg-2"><a ng-click="sortBy('price')" translate="types.Product.price"></a></th>
+          <th class="col-lg-2"><a ng-click="sortBy('stock')" translate="types.Product.stock"></a></th>
+          <th class="col-lg-3" translate="labels.common.actions"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="product in pageInfo.items">
+          <td class="col-lg-2">{{product.name}}</td>
+          <td class="col-lg-3">{{product.description}}</td>
+          <td class="col-lg-2">{{product.price | money}}</td>
+          <td class="col-lg-2">{{product.stock}}</td>
+          <td class="col-lg-3">
+            <button class="btn btn-sm btn-primary" ng-click="view(product)"><i class="glyphicon glyphicon-eye-open"></i>  <span translate="actions.common.view"></span></button>
+            <button class="btn btn-sm" ng-click="edit(product)"><i class="glyphicon glyphicon-pencil"></i> <span translate="actions.common.edit"></span></button>
+            <button class="btn btn-sm btn-danger" ng-click="remove(product)"><i class="glyphicon glyphicon-trash"></i> <span translate="actions.common.delete"></span></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <qn-paginate page-model="pageInfo" page-changed="pageChanged()"></qn-paginate>
+
+</div>

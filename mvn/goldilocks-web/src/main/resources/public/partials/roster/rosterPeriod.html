@@ -1,0 +1,24 @@
+<div>
+  <h2 translate="pages.regularDays.title" translate-value-name="{{editModel.staff.name}}"></h2>
+
+  <h4>{{rosterDuration | duration:'hours':'minutes':'long'}}</h4>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="col-calendar" style="width: 8%;">
+        <div class="col-calendar-header"></div>
+        <div ui-calendar="calendarModel.axis.uiConfig" ng-model="calendarModel.axis.eventSource"
+          calendar="{{calendarModel.axis.key}}"></div>
+      </div>
+      <div class="col-calendar" ng-style="calendarModel.style(92)">
+
+        <div class="col-calendar-header">
+          <div class="col-header-inner">ROSTER</div>
+        </div>
+        <div ui-calendar="calendarModel.calendars.rosterPeriod.uiConfig"
+          ng-model="calendarModel.calendars.rosterPeriod.eventSource" calendar="{{calendarModel.calendars.rosterPeriod.key}}"></div>
+      </div>
+    </div>
+  </div>
+
+</div>

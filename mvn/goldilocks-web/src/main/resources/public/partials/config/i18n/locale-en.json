@@ -1,0 +1,80 @@
+{
+	"page":{
+		"title":"{{system}} - System Configuration"
+	},
+	"pages":{
+		"editConfig":{
+			"title":"System Configuration"
+		},
+		"openingHours":{
+			"title":"Opening Hours"
+		}
+
+	},
+	"labels":{
+		"systemInfo":{
+			"title":"General settings"
+		},
+		"businessHours":{
+			"title":"Dates and times",
+			"use24HourClock":"24 hour clock",
+			"use12HourClock":"12 hour clock",
+			"openingHours":{
+				"title":"Business Hours",
+				"dayClosed":"Closed",
+				"openingTime":"Opening time",
+				"closingTime":"Closing time"
+			},
+			"timeSlotDuration":{
+				"fiveMinutes":"Five minutes",
+				"tenMinutes":"Ten minutes",
+				"fifteenMinutes":"Fifteen minutes",
+				"twentyMinutes":"Twenty minutes",
+				"thirtyMinutes":"Half an hour",
+				"oneHour":"One hour"
+			}
+
+		},
+		"uiColours":{
+			"roster":"Roster Colours",
+			"openingHours":"Opening Hours Colours"
+		}
+
+	},
+	"actions":{
+		"openingHours":{
+			"businessHoursDayClosed":"Close",
+			"businessHoursDayOpen":"Open"
+		}
+
+	},
+	"types":{
+		"ApplicationConfig":{
+			"_typeName":"System Configuration",
+			"systemInfo":{
+				"name":"System name"
+			},
+			"businessHours":{
+				"use24HourClock":"Time display",
+				"weekStartDay":"First day of week",
+				"timeSlotDuration":"Time slot duration"
+			},
+			"ui":{
+				"roster":{
+					"calendarBackgroundColour":"Background colour",
+					"nonBusinessHoursColour":"Non-business hours colour",
+					"rosteredTimeSegmentColour":"Rostered time period colour",
+					"selectedTimeSegmentColour":"Selected time period colour"
+				},
+				"openingHours":{
+					"calendarBackgroundColour":"Background colour",
+					"businessHoursTimeSegmentColour":"Opening time period colour",
+					"selectedTimeSegmentColour":"Selected time period colour"
+				}
+
+			}
+
+		}
+
+	}
+}

@@ -1,0 +1,41 @@
+<div>
+  <h2 ng-show="editModel.existing && editMode" translate="pages.editStaff.editTitle"></h2>
+  <h2 ng-show="editModel.existing && !editMode" translate="pages.editStaff.viewTitle"></h2>
+  <h2 ng-show="!editModel.existing" translate="pages.editStaff.newTitle"></h2>
+
+  <form name="editForm" class="form-vertical" novalidate autocomplete="off" ng-submit>
+
+
+    <div class="row">
+      <div class="col-lg-4">
+        <label class="control-label" translate="types.Staff.name"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <input class="form-control" ng-model="editModel.name" id="name" type="text" ng-required="true" min="2" max="80"
+            ng-disabled="!editMode" />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <label class="control-label" translate="types.Staff.expertiseLevel"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <select class="form-control" name="expertiseLevel" id="expertiseLevel" ng-required="true" ng-disabled="!editMode" qn-enum-options="ExpertiseLevel"
+            ng-model="editModel.expertiseLevel"></select>
+        </div>
+      </div>
+    </div>
+
+
+  </form>
+
+
+</div>

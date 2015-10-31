@@ -1,0 +1,39 @@
+<div>
+  <h2 translate="pages.listStaffRosters.title"></h2>
+
+  <form name="searchForm" class="form-inline" novalidate autocomplete="off" ng-submit></form>
+
+  <qn-paginate page-model="pageInfo" page-changed="pageChanged()" show-sizer="true"></qn-paginate>
+  <qn-filter filter-model="pageInfo" filter-changed="pageChanged()"></qn-filter>
+
+  <div class="table-responsive col-lg-12">
+    <table class="table table-condensed table-striped table-hover">
+      <thead>
+        <tr>
+          <th class="col-lg-2"><a ng-click="sortBy('name')" translate="types.Staff.name"></a></th>
+          <th class="col-lg-1" translate="types.StaffRosterSummary.regularHours"></th>
+          <th class="col-lg-6" translate="types.StaffRosterSummary.regularDays"></th>
+          <th class="col-lg-3" translate="labels.common.actions"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="roster in pageInfo.items">
+          <td class="col-lg-2">{{roster.staff.name}}</td>
+          <td class="col-lg-1">{{roster.regularHours | duration:'hours':'minutes':'short'}}</td>
+          <td class="col-lg-6"><span ng-repeat="day in roster.regularDays | orderBy : $daysOfWeek.sort">{{day | translateEnum:'DayOfWeek':'short'}}<span
+              ng-if="!$last">, </span></span></td>
+          <td class="col-lg-3">
+            <button class="btn btn-sm" ng-click="editRegularDays(roster)">
+              <i class="glyphicon glyphicon-calendar"></i> <span translate="actions.regularDays"></span>
+            </button>
+            <button class="btn btn-sm" ng-click="editPeriod(roster)">
+              <i class="glyphicon glyphicon-calendar"></i> <span translate="actions.rosterPeriod"></span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <qn-paginate page-model="pageInfo" page-changed="pageChanged()"></qn-paginate>
+
+</div>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<body>
+  <th:block th:fragment="header">
+    <header scroll-y-offset-element="" class="header header-fixed">
+      <section class="navbar navbar-inverse docs-navbar-primary">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-8 col-xs-8 col-close-padding-next header-branding">
+              <ul class="nav navbar-nav">
+                <li class="dropdown" dropdown=""><a href="#" class="dropdown-toggle brand navbar-brand" dropdown-toggle="">
+                    <h3>
+                      <span translate="system.title" translate-value-system="{{$applicationConfig.systemInfo.name}}"></span> <b
+                        th:if="${user != null}" class="caret"></b>
+                    </h3>
+                </a>
+                  <ul class="dropdown-menu" th:if="${user != null}">
+                    <li ng-if="$user.hasRole('ROLE_USER')"><a th:href="@{/#/}"><i class="glyphicon glyphicon-calendar"></i> <span
+                        translate="actions.nav.planner"></span></a></li>
+                    <li ng-if="$user.hasRole('ROLE_USER')"><a th:href="@{/web/clients/#/}"><i class="glyphicon glyphicon-user"></i>
+                        <span translate="actions.nav.clients"></span></a></li>
+                    <li ng-if="$user.hasRole('ROLE_PRODUCT_ADMIN')"><a th:href="@{/web/products/#/}"><i
+                        class="glyphicon glyphicon-baby-formula"></i> <span translate="actions.nav.products"></span></a></li>
+                    <li ng-if="$user.hasRole('ROLE_SERVICE_ADMIN')"><a th:href="@{/web/services/#/}"><i
+                        class="glyphicon glyphicon-scissors"></i> <span translate="actions.nav.services"></span></a></li>
+                    <li ng-if="$user.hasRole('ROLE_STAFF_ADMIN')"><a th:href="@{/web/staff/#/}"><i class="glyphicon glyphicon-user"></i>
+                        <span translate="actions.nav.staff"></span></a></li>
+                    <li ng-if="$user.hasRole('ROLE_STAFF_ADMIN')"><a th:href="@{/web/roster/#/}"><i class="glyphicon glyphicon-calendar"></i>
+                        <span translate="actions.nav.roster"></span></a></li>
+                    <li ng-if="$user.hasRole('ROLE_USER_ADMIN')"><a th:href="@{/web/users/#/}"><i class="glyphicon glyphicon-cog"></i>
+                        <span translate="actions.nav.users"></span></a></li>
+                    <li ng-if="$user.hasRole('ROLE_SYSTEM_ADMIN')"><a th:href="@{/web/config/#/}"><i class="glyphicon glyphicon-wrench"></i>
+                        <span translate="actions.nav.config"></span></a></li>
+                    <li ng-if="$user.hasRole('ROLE_SYSTEM_ADMIN')"><a th:href="@{/web/config/#/openingHours/}"><i class="glyphicon glyphicon-calendar"></i>
+                        <span translate="actions.nav.openingHours"></span></a></li>
+                  </ul></li>
+              </ul>
+            </div>
+
+            <div class="col-lg-8 col-md-8 hidden-sm hidden-xs col-close-padding-previous header-branding">
+              <ul class="nav navbar-nav" th:if="${user != null}">
+                <li class="divider-vertical" ng-repeat-start="action in pageContext.actions.page" ng-if="action.context!=true"></li>
+                <li ng-repeat-end="" ng-if="action.context!=true">
+                  <button href="#" qn-action="action" class="btn {{action.primary ? 'btn-primary' : ''}}"></button>
+                </li>
+              </ul>
+              <ul class="nav navbar-nav flt-rt" th:if="${user != null}">
+                <li class="divider-vertical" ng-repeat-start="action in pageContext.actions.page" ng-if="action.context==true"></li>
+                <li ng-repeat-end="" ng-if="action.context==true">
+                  <button href="#" qn-action="action" class="btn {{action.primary ? 'btn-primary' : ''}}"></button>
+                </li>
+              </ul>
+            </div>
+
+            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
+              <ul class="nav navbar-nav" th:if="${user != null}">
+                <li class="divider-vertical"></li>
+                <li class="divider-vertical"></li>
+                <li class="dropdown" dropdown=""><a href="#" class="dropdown-toggle" dropdown-toggle=""> <i
+                    class="glyphicon glyphicon-lock"></i> <span translate="actions.account.menu" translate-value-username="{{$user.name}}"></span>
+                    <b class="caret"></b>
+                </a>
+                  <ul class="dropdown-menu pull-left">
+                    <li><a th:href="@{/web/account#/change-password}"> <i class="glyphicon glyphicon-eye-close"></i> <span
+                        translate="actions.account.changePassword"></span></a></li>
+                    <li><a href="" onclick="document.forms['logout'].submit()"><i class="glyphicon glyphicon-log-out"></i> <span
+                        translate="actions.account.logOut"></span></a>
+                      <form id="logout" style="display: none;" th:action="@{/logout}" method="post">
+                        <input type="submit" value="Sign Out" />
+                      </form></li>
+                  </ul></li>
+              </ul>
+            </div>
+
+
+            <!-- repeated action bar for xs -->
+            <div class="col-sm-12 col-xs-12 visible-sm visible-xs header-branding">
+              <ul class="nav navbar-nav" th:if="${user != null}">
+                <li class="divider-vertical" ng-repeat-start="action in pageContext.actions.page" ng-if="action.context!=true"></li>
+                <li ng-repeat-end=""  ng-if="action.context!=true">
+                  <button href="#" qn-action="action" class="btn {{action.primary ? 'btn-primary' : ''}}"></button>
+                </li>
+              </ul>
+              <ul class="nav navbar-nav flt-rt" th:if="${user != null}">
+                <li class="divider-vertical" ng-repeat-start="action in pageContext.actions.page"  ng-if="action.context==true"></li>
+                <li ng-repeat-end="" ng-if="action.context==true">
+                  <button href="#" qn-action="action" class="btn {{action.primary ? 'btn-primary' : ''}}"></button>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </section>
+    </header>
+  </th:block>
+  <th:block th:fragment="footer">
+    <footer></footer>
+  </th:block>
+  <th:block th:fragment="scripts">
+    <script type="text/javascript" th:src="|/js/underscore/underscore${jsMin}.js|"></script>
+    <script type="text/javascript" th:src="|/js/moment/moment${jsMin}.js|"></script>
+    <script type="text/javascript" th:src="|/js/jss/jss${jsMin}.js|"></script>
+    <script type="text/javascript" th:src="|/js/angular/angular${jsMin}.js|"></script>
+    <script type="text/javascript" th:src="|/js/angular/i18n/angular-locale_en-gb.js|"></script>
+    <script type="text/javascript" th:src="|/js/angular/angular-animate${jsMin}.js|"></script>
+    <script type="text/javascript" th:src="|/js/angular/angular-route${jsMin}.js|"></script>
+    <script type="text/javascript" th:src="|/js/angular/angular-sanitize${jsMin}.js|"></script>
+    <script type="text/javascript" th:src="|/js/ui-bootstrap/ui-bootstrap-tpls${jsMin}.js|"></script>
+    <script type="text/javascript" th:src="|/js/translate/angular-translate${jsMin}.js|"></script>
+    <script type="text/javascript" th:src="|/js/translate/angular-translate-loader-partial${jsMin}.js|"></script>
+    <script type="text/javascript" th:src="|/js/notify/angular-notify${jsMin}.js|"></script>
+    <script type="text/javascript" th:src="|/js/ng-context-menu/ng-context-menu${jsMin}.js|"></script>
+    <script type="text/javascript" th:inline="javascript">
+          qn = {};
+          qn.currentUser = /*[[${user}]]*/{};
+          qn.applicationConfig = /*[[${applicationConfig}]]*/{};
+        </script>
+    <script type="text/javascript" th:src="|/js/goldilocks/goldilocks-util.js|"></script>
+    <script type="text/javascript" th:src="|/js/goldilocks/goldilocks-util-angular.js|"></script>
+    <script type="text/javascript" th:src="|/js/goldilocks/goldilocks-util-ui.js|"></script>
+    <script type="text/javascript" th:src="|/js/goldilocks-service.js|"></script>
+    <script type="text/javascript" th:src="|/js/goldilocks-ui.js|"></script>
+  </th:block>
+  <th:block th:fragment="css">
+    <link rel="stylesheet" href="/css/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" href="/css/bootstrap/css/bootstrap-theme.css" />
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="/css/open-sans-fontface/open-sans.css" />
+    <link rel="stylesheet" href="/css/notify/angular-notify.css" />
+    <link rel="stylesheet" href="/css/goldilocks.css" />
+  </th:block>
+  <th:block th:fragment="calendar-css">
+    <link rel="stylesheet" href="/css/fullcalendar/fullcalendar.css" />
+  </th:block>
+  <th:block th:fragment="calendar-pre-scripts">
+    <script type="text/javascript" th:src="|/js/jquery/jquery${jsMin}.js|"></script>
+  </th:block>
+  <th:block th:fragment="calendar-scripts">
+    <script type="text/javascript" th:src="|/js/ui-calendar/calendar.js|"></script>
+    <script type="text/javascript" th:src="|/js/fullcalendar/fullcalendar${jsMin}.js|"></script>
+    <script type="text/javascript" th:src="|/js/goldilocks/goldilocks-ui-calendar.js|"></script>
+  </th:block>
+</body>
+</html>

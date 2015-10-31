@@ -1,0 +1,33 @@
+{
+	"page":{
+		"title":"{{system}} - User Account"
+	},
+	"pages":{
+		"changePassword":{
+			"labels":{
+				"header":"Change Password",
+				"currentPassword":"Enter current password",
+				"newPassword":"New password",
+				"confirmPassword":"Confirm new password"
+			}
+		}
+	},
+	"actions":{
+		"changePassword":"Change Password"
+	},
+	"messages":{
+		"account":{
+			"changePassword":{
+				"pwCheckOld":"New password must not match the old password.",
+				"pwCheck":"Passwords don't match.",
+				"existingPasswordRequired":"You must enter your existing password.",
+				"newPasswordRequired":"You must enter a new password.",
+				"invalidCredentials":"You must enter your correct existing password.",
+				"passwordPolicy":"New password does not meet password policy."
+			},
+			"validation": {
+				"username":"User Id is already taken"
+			}
+		}
+	}
+}

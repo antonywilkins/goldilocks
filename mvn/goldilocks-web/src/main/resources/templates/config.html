@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+  <th:block th:fragment="pre-head">
+    <title translate="page.title" translate-value-system="{{$applicationConfig.systemInfo.name}}"></title>
+  </th:block>
+
+  <th:block th:fragment="pre-css">
+    <th:block th:replace="layouts/common :: calendar-css" />
+  </th:block>
+  <th:block th:fragment="pre-scripts">
+    <th:block th:replace="layouts/common :: calendar-pre-scripts" />
+  </th:block>
+  <th:block th:fragment="post-scripts">
+    <th:block th:replace="layouts/common :: calendar-scripts" />
+    <script type="text/javascript" src="/js/goldilocks-app-config.js"></script>
+  </th:block>
+
+  <th:block th:fragment="content">
+    <div ng-view=""></div>
+  </th:block>
+</body>
+</html>

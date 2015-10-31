@@ -1,0 +1,10 @@
+<div class="modal-header">
+  <h3 class="modal-title"><span translate="labels.confirmDelete.title" translate-value-type="{{config.type}}"></span></h3>
+</div>
+<div class="modal-body">
+  <span translate="labels.confirmDelete.detail" translate-value-description="{{config.description}}"></span>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-danger" ng-click="confirm()"><i class="glyphicon glyphicon-trash"></i> <span translate="actions.common.delete"></span></button>
+  <button class="btn btn-primary" ng-click="cancel()"><i class="glyphicon glyphicon-remove"></i> <span translate="actions.common.cancel"></span></button>
+</div>

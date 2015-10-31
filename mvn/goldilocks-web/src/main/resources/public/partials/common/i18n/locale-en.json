@@ -1,0 +1,394 @@
+{
+	"system":{
+		"title":"{{system}}"
+	},
+	"actions":{
+		"common":{
+			"cancel":"Cancel",
+			"delete":"Delete",
+			"edit":"Edit",
+			"remove":"Remove",
+			"reset":"Reset",
+			"save":"Save",
+			"view":"View",
+			"select":"Select",
+			"unselect":"Unselect",
+			"calendar":{
+				"clearSelection":"Clear selection",
+				"deleteSelected":"Delete selected",
+				"mergeSelected":"Merge touching periods",
+				"merge":"Merge periods"
+			}
+
+		},
+		"nav":{
+			"menu":"Navigate",
+			"clients":"Clients",
+			"config":"System Config",
+			"openingHours":"Opening Hours",
+			"planner":"Planner",
+			"products":"Products",
+			"roster":"Roster",
+			"services":"Services",
+			"staff":"Stylists",
+			"users":"Users"
+		},
+		"account":{
+			"menu":"{{username}}",
+			"changePassword":"Change Password",
+			"logOut":"Log Out"
+		}
+
+	},
+	"types":{
+		"CancelReason":{
+			"NO_SHOW":"Client didn't show up",
+			"NOTIFIED":"Client notified us"
+		},
+		"DayOfWeek":{
+			"SUNDAY":{
+				"default":"Sunday",
+				"short":"Sun"
+			},
+			"MONDAY":{
+				"default":"Monday",
+				"short":"Mon"
+			},
+			"TUESDAY":{
+				"default":"Tuesday",
+				"short":"Tue"
+			},
+			"WEDNESDAY":{
+				"default":"Wednesday",
+				"short":"Wed"
+			},
+			"THURSDAY":{
+				"default":"Thursday",
+				"short":"Thu"
+			},
+			"FRIDAY":{
+				"default":"Friday",
+				"short":"Fri"
+			},
+			"SATURDAY":{
+				"default":"Saturday",
+				"short":"Sat"
+			}
+
+		},
+		"ExpertiseLevel":{
+			"JUNIOR":"Junior",
+			"SENIOR":"Senior",
+			"MANAGER":"Manager"
+		},
+		"Gender":{
+			"MALE":"Male",
+			"FEMALE":"Female"
+		},
+		"PhoneNumberType":{
+			"HOME":"Home",
+			"MOBILE":"Mobile",
+			"WORK":"Work"
+		},
+		"User":{
+			"_typeName":"User",
+			"id":"User Id",
+			"name":"User Name",
+			"password":"Password",
+			"roles":"Roles"
+		},
+		"Role":{
+			"_typeName":"Role",
+			"id":"Name"
+		},
+		"Client":{
+			"_typeName":"Client",
+			"id":"Id",
+			"firstName":"First Name",
+			"lastName":"Last Name",
+			"comments":"Comments",
+			"email":"Email",
+			"phoneNumbers":"Phone Numbers",
+			"address":"Address",
+			"gender":"Gender",
+			"age":"Age",
+			"dateOfBirth":"Date of Birth"
+		},
+		"Product":{
+			"_typeName":"Product",
+			"id":"Id",
+			"name":"Name",
+			"description":"Description",
+			"price":"Price",
+			"stock":"Stock"
+		},
+		"Service":{
+			"_typeName":"Service",
+			"id":"Id",
+			"name":"Name",
+			"description":"Description"
+		},
+		"Staff":{
+			"_typeName":"Stylist",
+			"id":"Id",
+			"name":"Name",
+			"expertiseLevel":"Expertise Level"
+		}
+
+	},
+	"duration":{
+		"years":{
+			"delimited":{
+				"separator":" ",
+				"postfix":{
+					"zero":" years",
+					"one":" year",
+					"many":" years"
+				}
+
+			},
+			"short":{
+				"separator":" ",
+				"postfix":{
+					"zero":" years",
+					"one":" year",
+					"many":" years"
+				}
+
+			},
+			"long":{
+				"separator":" ",
+				"postfix":{
+					"zero":" years",
+					"one":" year",
+					"many":" years"
+				}
+
+			}
+
+		},
+		"months":{
+			"delimited":{
+				"separator":" ",
+				"postfix":{
+					"zero":" months",
+					"one":" month",
+					"many":" months"
+				}
+
+			},
+			"short":{
+				"separator":" ",
+				"postfix":{
+					"zero":" months",
+					"one":" month",
+					"many":" months"
+				}
+
+			},
+			"long":{
+				"separator":" ",
+				"postfix":{
+					"zero":" months",
+					"one":" month",
+					"many":" months"
+				}
+
+			}
+
+		},
+		"days":{
+			"delimited":{
+				"separator":" ",
+				"postfix":{
+					"zero":" days",
+					"one":" day",
+					"many":" days"
+				}
+
+			},
+			"short":{
+				"separator":" ",
+				"postfix":{
+					"zero":" days",
+					"one":" day",
+					"many":" days"
+				}
+
+			},
+			"long":{
+				"separator":" ",
+				"postfix":{
+					"zero":" days",
+					"one":" day",
+					"many":" days"
+				}
+
+			}
+
+		},
+		"hours":{
+			"delimited":{
+				"separator":" ",
+				"postfix":{
+					"zero":"",
+					"one":"",
+					"many":""
+				}
+
+			},
+			"short":{
+				"separator":" ",
+				"postfix":{
+					"zero":" h",
+					"one":" h",
+					"many":" h"
+				}
+
+			},
+			"long":{
+				"separator":": ",
+				"postfix":{
+					"zero":" hours",
+					"one":" hour",
+					"many":" hours"
+				}
+
+			}
+
+		},
+		"minutes":{
+			"delimited":{
+				"separator":":",
+				"postfix":{
+					"zero":"",
+					"one":"",
+					"many":""
+				}
+
+			},
+			"short":{
+				"separator":" ",
+				"postfix":{
+					"zero":" m",
+					"one":" m",
+					"many":" m"
+				}
+
+			},
+			"long":{
+				"separator":" ",
+				"postfix":{
+					"zero":" minutes",
+					"one":" minute",
+					"many":" minutes"
+				}
+
+			}
+
+		},
+		"seconds":{
+			"delimited":{
+				"separator":":",
+				"postfix":{
+					"zero":"",
+					"one":"",
+					"many":""
+				}
+
+			},
+			"short":{
+				"separator":" ",
+				"postfix":{
+					"zero":" s",
+					"one":" s",
+					"many":" s"
+				}
+
+			},
+			"long":{
+				"separator":" ",
+				"postfix":{
+					"zero":" seconds",
+					"one":" second",
+					"many":" seconds"
+				}
+
+			}
+
+		},
+		"milliseconds":{
+			"delimited":{
+				"separator":".",
+				"postfix":{
+					"zero":"",
+					"one":"",
+					"many":""
+				}
+
+			},
+			"short":{
+				"separator":" ",
+				"postfix":{
+					"zero":" ms",
+					"one":" ms",
+					"many":" ms"
+				}
+
+			},
+			"long":{
+				"separator":" ",
+				"postfix":{
+					"zero":" milliseconds",
+					"one":" millisecond",
+					"many":" milliseconds"
+				}
+
+			}
+
+		}
+
+	},
+	"labels":{
+		"confirmDelete":{
+			"title":"Delete {{type}}.  Are you sure?",
+			"detail":"Are you sure you wish to delete {{description}}?"
+		},
+		"common":{
+			"actions":"Actions",
+			"filterPlaceholder":"Type to filter..."
+		},
+		"pagination":{
+			"zeroResults":"No results",
+			"oneResult":"1 result",
+			"manyResults":"{{count}} results",
+			"zeroPages":"No pages",
+			"onePage":"1 page",
+			"manyPages":"{{count}} pages",
+			"pageSize":"Page size",
+			"firstPage":"First",
+			"lastPage":"Last",
+			"nextPage":"Next",
+			"previousPage":"Previous"
+		}
+
+	},
+	"messages":{
+		"io":{
+			"exception":{
+				"noSuchEntity":"Cannot find the requested record"
+			}
+
+		},
+		"save":{
+			"success":"Saved succesfully"
+		},
+		"delete":{
+			"success":"Deleted succesfully"
+		},
+		"validation":{
+			"numberFormat":"Must be a valid number"
+		}
+
+	}
+}

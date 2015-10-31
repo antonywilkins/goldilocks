@@ -1,0 +1,156 @@
+<div>
+  <h2 ng-show="editModel.existing && editMode" translate="pages.editClient.editTitle"></h2>
+  <h2 ng-show="editModel.existing && !editMode" translate="pages.editClient.viewTitle"></h2>
+  <h2 ng-show="!editModel.existing" translate="pages.editClient.newTitle"></h2>
+
+  <form name="editForm" class="form-vertical" novalidate autocomplete="off" ng-submit>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <label class="control-label" translate="types.Client.firstName"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <input class="form-control" ng-model="editModel.firstName" id="firstName" type="text" ng-required="true" min="2" max="80"
+            ng-disabled="!editMode" />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <label class="control-label" translate="types.Client.lastName"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <input class="form-control" ng-model="editModel.lastName" id="lastName" type="text" ng-required="true" min="2" max="80"
+            ng-disabled="!editMode" />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <label class="control-label" translate="types.Client.dateOfBirth"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <input class="form-control" ng-model="editModel.dateOfBirth" id="dateOfBirth" type="date" ng-required="true"
+            ng-disabled="!editMode" max="{{$startOfTomorrow | date:'yyyy-MM-dd' }}"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <label class="control-label" translate="types.Client.age"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          {{editModel.ageRoughly | duration:'years':'months':'long'}}
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <label class="control-label" translate="types.Client.gender"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <select class="form-control" name="gender" id="gender" ng-required="true" ng-disabled="!editMode" qn-enum-options="Gender"
+            ng-model="editModel.gender"></select>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-lg-4">
+        <label class="control-label" translate="types.Client.email"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <input class="form-control" ng-model="editModel.email" id="email" type="email" ng-required="false" max="100"
+            ng-disabled="!editMode" />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <label class="control-label" translate="types.Client.address"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <textarea class="form-control" ng-model="editModel.address" id="address" ng-required="false" max="1000" rows="5"
+            ng-disabled="!editMode" ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <label class="control-label" translate="types.Client.phoneNumbers"></label>
+      </div>
+      <div class="col-lg-2">
+        <button class="btn btn-xs btn-primary flt-rt" ng-click="editModel.addPhoneNumber()" ng-show="editMode" ng-disabled="!editModel.phoneNumbersValid()">
+          <i class="glyphicon glyphicon-plus"></i><span translate="pages.editClient.addPhoneNumber"></span>
+        </button>
+      </div>
+    </div>
+    <div class="row form-row" ng-show="editModel.phoneNumbers.length < 1">
+      <div class="col-lg-6">
+        <span translate="pages.editClient.noPhoneNumbers"></span>
+      </div>
+    </div>
+    <div class="row form-row" ng-repeat="phoneNumber in editModel.phoneNumbers track by $index">
+      <div class="col-lg-2">
+        <select class="form-control" name="phoneNumberType" id="phoneNumberType" ng-required="true" ng-disabled="!editMode" qn-enum-options="PhoneNumberType"
+            ng-model="editModel.phoneNumbers[$index].type"></select>
+      </div>
+      <div class="col-lg-4">
+        <div class="input-group">
+          <input class="form-control" ng-model="editModel.phoneNumbers[$index].phoneNumber" name="phoneNumber" type="text" ng-required="true"
+            ng-disabled="!editMode" /> <span class="input-group-btn">
+            <button class="btn" ng-click="editModel.removePhoneNumber($index)" ng-show="editMode">
+              <i class="glyphicon glyphicon-minus"></i> <span translate="actions.common.remove"></span>
+            </button>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row"></div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <label class="control-label" translate="types.Client.comments"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <textarea class="form-control" ng-model="editModel.comments" id="address" ng-required="false" max="1000" rows="5"
+            ng-disabled="!editMode" ></textarea>
+        </div>
+      </div>
+    </div>
+
+
+  </form>
+</div>

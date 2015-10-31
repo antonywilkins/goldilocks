@@ -1,0 +1,35 @@
+<div>
+  <h2 translate="pages.listClients.title"></h2>
+
+  <qn-paginate page-model="pageInfo" page-changed="pageChanged()" show-sizer="true"></qn-paginate>
+  <qn-filter filter-model="pageInfo" filter-changed="pageChanged()" ></qn-filter>
+
+  <div class="table-responsive col-lg-12">
+    <table class="table table-condensed table-striped table-hover">
+      <thead>
+        <tr>
+          <th class="col-lg-2"><a ng-click="sortBy('firstName')" translate="types.Client.firstName"></a></th>
+          <th class="col-lg-3"><a ng-click="sortBy('lastName')" translate="types.Client.lastName"></a></th>
+          <th class="col-lg-2"><a ng-click="sortBy('dateOfBirth')" translate="types.Client.age"></a></th>
+          <th class="col-lg-2"><a ng-click="sortBy('gender')" translate="types.Client.gender"></a></th>
+          <th class="col-lg-3" translate="labels.common.actions"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="client in pageInfo.items">
+          <td class="col-lg-2">{{client.firstName}}</td>
+          <td class="col-lg-3">{{client.lastName}}</td>
+          <td class="col-lg-2">{{client.ageRoughly | duration:'years':'months':'long'}}</td>
+          <td class="col-lg-2">{{client.gender | translateEnum:'Gender'}}</td>
+          <td class="col-lg-4">
+            <button class="btn btn-sm btn-primary" ng-click="view(client)"><i class="glyphicon glyphicon-eye-open"></i>  <span translate="actions.common.view"></span></button>
+            <button class="btn btn-sm" ng-click="edit(client)"><i class="glyphicon glyphicon-pencil"></i> <span translate="actions.common.edit"></span></button>
+            <button class="btn btn-sm btn-danger" ng-click="remove(client)"><i class="glyphicon glyphicon-trash"></i> <span translate="actions.common.delete"></span></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <qn-paginate page-model="pageInfo" page-changed="pageChanged()"></qn-paginate>
+
+</div>

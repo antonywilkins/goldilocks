@@ -1,0 +1,10 @@
+<div context-menu class="calendar-panel" data-target="menu-{{sourceEvent.id}}" ng-class="{ 'highlight': highlight, 'expanded' : expanded }">
+
+  <div qn-append-to-body class="dropdown position-fixed context-menu-content" id="menu-{{sourceEvent.id}}">
+    <ul class="dropdown-menu" role="menu">
+      <li ng-repeat="action in contextActions" ng-if="action.available(sourceEvent)" ng-class="{'disabled' : !action.enabled(sourceEvent)}">
+        <a class="pointer" role="menuitem" tabindex="1" qn-action="action" qn-action-target="sourceEvent"></a>
+      </li>
+    </ul>
+  </div>
+</div>

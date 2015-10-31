@@ -1,0 +1,16 @@
+<div class="alert cg-notify-message"
+  ng-class="[$classes,
+    $position === 'top' ? 'cg-notify-message-top' : '',
+    $position === 'center' ? 'cg-notify-message-center' : '',
+    $position === 'left' ? 'cg-notify-message-left' : '',
+    $position === 'right' ? 'cg-notify-message-right' : '']"
+  ng-style="{'margin-left': $centerMargin}" ng-click="$notificationClicked()">
+
+  <button ng-click="$close()" type="button" class="close cg-notify-close" aria-label="Close" ng-if="!$clickAnyWhereToClose">
+    <span aria-hidden="true">&times;</span> <span class="cg-notify-sr-only">Close</span>
+  </button>
+
+  <div ng-if="!$messageTemplate">{{$message | translate}}</div>
+  <div ng-if="$messageTemplate" class="cg-notify-message-template"></div>
+
+</div>

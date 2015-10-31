@@ -1,0 +1,33 @@
+<div>
+  <h2 translate="pages.listServices.title"></h2>
+
+  <form name="searchForm" class="form-inline" novalidate autocomplete="off" ng-submit></form>
+
+  <qn-paginate page-model="pageInfo" page-changed="pageChanged()" show-sizer="true"></qn-paginate>
+  <qn-filter filter-model="pageInfo"filter-changed="pageChanged()"></qn-filter>
+
+  <div class="table-responsive col-lg-12">
+    <table class="table table-condensed table-striped table-hover">
+      <thead>
+        <tr>
+          <th class="col-lg-3"><a ng-click="sortBy('name')" translate="types.Service.name"></a></th>
+          <th class="col-lg-3"><a ng-click="sortBy('description')" translate="types.Service.description"></a></th>
+          <th class="col-lg-3" translate="labels.common.actions"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="service in pageInfo.items">
+          <td class="col-lg-3">{{service.name}}</td>
+          <td class="col-lg-3">{{service.description}}</td>
+          <td class="col-lg-3">
+            <button class="btn btn-sm btn-primary" ng-click="view(service)"><i class="glyphicon glyphicon-eye-open"></i>  <span translate="actions.common.view"></span></button>
+            <button class="btn btn-sm" ng-click="edit(service)"><i class="glyphicon glyphicon-pencil"></i> <span translate="actions.common.edit"></span></button>
+            <button class="btn btn-sm btn-danger" ng-click="remove(service)"><i class="glyphicon glyphicon-trash"></i> <span translate="actions.common.delete"></span></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <qn-paginate page-model="pageInfo" page-changed="pageChanged()"></qn-paginate>
+
+</div>

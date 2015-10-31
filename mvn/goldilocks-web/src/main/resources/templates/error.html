@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+  <th:block th:fragment="pre-head">
+    <title translate="page.title" translate-value-system="{{$applicationConfig.systemInfo.name}}"></title>
+  </th:block>
+
+  <th:block th:fragment="post-scripts">
+    <script type="text/javascript" src="/js/goldilocks-app-error.js"></script>
+  </th:block>
+
+  <th:block th:fragment="content">
+
+    <h1 th:text="${errorCode}">500</h1>
+    <p th:text="${errorMessage}">Unexpected Error</p>
+  </th:block>
+</body>
+</html>

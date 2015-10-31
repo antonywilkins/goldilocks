@@ -1,0 +1,28 @@
+{
+	"page":{
+		"title":"{{system}} - Users"
+	},
+	"pages":{
+		"listUsers":{
+			"title":"User Administration"
+		},
+		"editUser":{
+			"newTitle":"New User",
+			"editTitle":"Edit User",
+			"viewTitle":"View User",
+			"addRole":"Add role",
+			"noRoles":"No roles"
+		}
+
+	},
+	"actions":{
+		"newUser":"New User"
+	},
+	"messages":{
+		"account":{
+			"edit":{
+				"username":"This Id is already taken"
+			}
+		}
+	}
+}

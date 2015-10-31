@@ -1,0 +1,21 @@
+{
+	"page":{
+		"title":"{{system}} - Stylists"
+	},
+	"pages":{
+		"listStaff":{
+			"title":"Stylist Administration"
+		},
+		"editStaff":{
+			"newTitle":"New Stylist",
+			"editTitle":"Edit Stylist",
+			"viewTitle":"View Stylist"
+		}
+
+	},
+	"actions":{
+		"newStaff":"New Stylist"
+	},
+	"messages":{
+	}
+}

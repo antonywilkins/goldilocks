@@ -1,0 +1,16 @@
+<div>
+  <h2 translate="pages.planner.title"></h2>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="col-calendar" style="width: 8%;">
+        <div ui-calendar="appointmentModel.calendarModel.axis.uiConfig" ng-model="appointmentModel.calendarModel.axis.eventSource"
+          calendar="appointmentModel.calendarModel.axis.calendar"></div>
+      </div>
+      <div class="col-calendar" ng-style="appointmentModel.calendarModel.style(92)"
+        ng-repeat="(staffId, staffCalendarModel) in appointmentModel.calendarModel.calendars">
+        <div ui-calendar="staffCalendarModel.uiConfig" ng-model="staffCalendarModel.eventSource" calendar="staffCalendarModel.calendar"></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+{
+	"page":{
+		"title":"{{system}} - Planner"
+	},
+	"pages":{
+		"planner":{
+			"title":"Day Book"
+		}
+	}
+}

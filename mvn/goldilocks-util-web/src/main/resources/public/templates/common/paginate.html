@@ -1,0 +1,24 @@
+<div class="col-lg-9">
+  <pagination total-items="pageModel.totalElements" ng-model="pageModel.currentPage" max-size="pageModel.numPageLinks" class="pagination-sm"
+    boundary-links="true" items-per-page="pageModel.pageSize" ng-change="pageChanged()"
+    first-text="{{'labels.pagination.firstPage' | translate}}" last-text="{{'labels.pagination.lastPage' | translate}}"
+    next-text="{{'labels.pagination.nextPage' | translate}}" previous-text="{{'labels.pagination.previousPage' | translate}}" /></pagination>
+
+  <ul class="pagination-sm pagination" ng-if="showSizer">
+    <li class="disabled"><a href=""> <span ng-switch="pageModel.totalElements"> <span ng-switch-when="0"
+          translate="labels.pagination.zeroResults" translate-value-count="{{pageModel.totalElements}}"></span> <span ng-switch-when="1"
+          translate="labels.pagination.oneResult" translate-value-count="{{pageModel.totalElements}}"></span> <span ng-switch-default
+          translate="labels.pagination.manyResults" translate-value-count="{{pageModel.totalElements}}"></span>
+      </span> / <span ng-switch="pageModel.totalPages"> <span ng-switch-when="0" translate="labels.pagination.zeroPages"
+          translate-value-count="{{pageModel.totalPages}}"></span> <span ng-switch-when="1" translate="labels.pagination.onePage"
+          translate-value-count="{{pageModel.totalPages}}"></span> <span ng-switch-default translate="labels.pagination.manyPages"
+          translate-value-count="{{pageModel.totalPages}}"></span>
+      </span>
+    </a></li>
+    <li class="disabled"><span> <span translate="labels.pagination.pageSize"></span> : &nbsp; <select class=""
+        ng-model="pageModel.pageSize" convert-to-number ng-change="pageChanged()">
+          <option ng-repeat="itemsPerPage in pageModel.availablePageSizes" ng-selected="{{itemsPerPage == pageModel.pageSize}}"
+            value="{{itemsPerPage}}">{{itemsPerPage}}</option>
+      </select></span></li>
+  </ul>
+</div>

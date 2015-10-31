@@ -1,0 +1,25 @@
+<div>
+  <h2 translate="pages.openingHours.title"></h2>
+
+  <h4>{{editModel.asDuration | duration:'hours':'minutes':'long'}}</h4>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="col-calendar" style="width: 8%;">
+        <div class="col-calendar-header"></div>
+        <div ui-calendar="calendarModel.axis.uiConfig" ng-model="calendarModel.axis.eventSource"
+          calendar="{{calendarModel.axis.key}}"></div>
+      </div>
+      <div class="col-calendar" ng-style="calendarModel.style(92)"
+        ng-repeat="dayOfWeek in $daysOfWeek.literals()" ng-if="calendarModel.calendars[dayOfWeek]">
+
+        <div class="col-calendar-header">
+          <div class="col-header-inner">{{dayOfWeek | translateEnum:'DayOfWeek'}}</div>
+        </div>
+        <div ui-calendar="calendarModel.calendars[dayOfWeek].uiConfig"
+          ng-model="calendarModel.calendars[dayOfWeek].eventSource" calendar="{{calendarModel.calendars[dayOfWeek].key}}"></div>
+      </div>
+    </div>
+  </div>
+
+</div>

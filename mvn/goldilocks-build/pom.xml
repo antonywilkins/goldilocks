@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+
+	<artifactId>goldilocks-build</artifactId>
+		<packaging>pom</packaging>
+
+	<parent>
+		<groupId>com.antonywilkins.goldilocks</groupId>
+		<artifactId>goldilocks-parent</artifactId>
+		<version>0.1.0</version>
+		<relativePath>../goldilocks-parent</relativePath>
+	</parent>
+
+	<modules>
+		<module>../goldilocks-app</module>
+		<module>../goldilocks-app-env-dev</module>
+		<module>../goldilocks-app-env-test</module>
+		<module>../goldilocks-domain</module>
+		<module>../goldilocks-parent</module>
+		<module>../goldilocks-util</module>
+		<module>../goldilocks-util-mvc</module>
+		<module>../goldilocks-util-web</module>
+		<module>../goldilocks-web</module>
+	</modules>
+
+</project>

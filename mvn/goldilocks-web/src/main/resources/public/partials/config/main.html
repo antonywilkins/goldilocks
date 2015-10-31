@@ -1,0 +1,184 @@
+<div>
+  <h2 translate="pages.editConfig.title"></h2>
+
+  <form name="editForm" class="form-vertical" novalidate autocomplete="off" ng-submit>
+
+    <div class="form-row"></div>
+
+    <h4 translate="labels.systemInfo.title"></h4>
+
+    <div class="row">
+      <div class="col-lg-5">
+        <label class="control-label" translate="types.ApplicationConfig.systemInfo.name"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-5">
+        <div class="form-group">
+          <input class="form-control" ng-model="editModel.propertyText.systemInfo.name" name="systemInfo_name" id="systemInfo_name"
+            type="text" ng-required="true" min="2" max="80" />
+        </div>
+      </div>
+    </div>
+
+    <h4 translate="labels.businessHours.title"></h4>
+
+    <div class="row">
+      <div class="col-lg-5">
+        <label class="control-label" translate="types.ApplicationConfig.businessHours.weekStartDay"></label>
+      </div>
+      <div class="col-lg-5">
+        <label class="control-label" translate="types.ApplicationConfig.businessHours.use24HourClock"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-5">
+        <div class="form-group">
+          <select class="form-control" name="businessHours_weekStartDay" id="businessHours_weekStartDay" ng-required="true"
+            qn-enum-options="DayOfWeek" ng-model="editModel.propertyText.businessHours.weekStartDay"></select>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="form-group">
+          <select class="form-control" name="businessHours_use24HourClock" id="businessHours_use24HourClock"
+            ng-model="editModel.propertyText.businessHours.use24HourClock"
+            ng-options="clockFmt.use24Hour as clockFmt.label for clockFmt in use24HourClockOptions">
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row"></div>
+
+    <div class="row">
+      <div class="col-lg-5">
+        <label class="control-label" translate="types.ApplicationConfig.businessHours.timeSlotDuration"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-5">
+        <div class="form-group">
+          <select class="form-control" name="businessHours_timeSlotDuration" id="businessHours_timeSlotDuration" ng-required="true"
+            ng-model="editModel.propertyText.businessHours.timeSlotDuration"
+            ng-options="timeSlotDuration.duration as timeSlotDuration.label for timeSlotDuration in timeSlotDurationOptions"></select>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="form-row"></div>
+
+    <h4 translate="labels.uiColours.roster"></h4>
+
+    <div class="row">
+      <div class="col-lg-5">
+        <label class="control-label" translate="types.ApplicationConfig.ui.roster.calendarBackgroundColour"></label>
+      </div>
+      <div class="col-lg-5">
+        <label class="control-label" translate="types.ApplicationConfig.ui.roster.rosteredTimeSegmentColour"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-5">
+        <div class="input-group col-lg-12">
+          <input class="form-control fc-col-3" ng-model="editModel.propertyText.ui.roster.calendarBackgroundColour"
+            name="ui_roster_calendarBackgroundColour" id="ui_roster_calendarBackgroundColour" type="text" ng-required="true" min="2"
+            max="20" /> <input class="form-control fc-col-9" ng-model="editModel.propertyText.ui.roster.calendarBackgroundColour"
+            name="ui_roster_calendarBackgroundColour" id="ui_roster_calendarBackgroundColour" type="color" ng-required="true" />
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="input-group col-lg-12">
+          <input class="form-control fc-col-3" ng-model="editModel.propertyText.ui.roster.rosteredTimeSegmentColour"
+            name="ui_roster_rosteredTimeSegmentColour" id="ui_roster_rosteredTimeSegmentColour" type="text" ng-required="true" min="2"
+            max="20" /> <input class="form-control fc-col-9" ng-model="editModel.propertyText.ui.roster.rosteredTimeSegmentColour"
+            name="ui_roster_rosteredTimeSegmentColour" id="ui_roster_rosteredTimeSegmentColour" type="color" ng-required="true" />
+        </div>
+      </div>
+    </div>
+    <div class="form-row"></div>
+
+    <div class="row">
+      <div class="col-lg-5">
+        <label class="control-label" translate="types.ApplicationConfig.ui.roster.nonBusinessHoursColour"></label>
+      </div>
+      <div class="col-lg-5">
+        <label class="control-label" translate="types.ApplicationConfig.ui.roster.selectedTimeSegmentColour"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-5">
+        <div class="input-group col-lg-12">
+          <input class="form-control fc-col-3" ng-model="editModel.propertyText.ui.roster.nonBusinessHoursColour"
+            name="ui_roster_nonBusinessHoursColour" id="ui_roster_nonBusinessHoursColour" type="text" ng-required="true" min="2" max="20" />
+          <input class="form-control fc-col-9" ng-model="editModel.propertyText.ui.roster.nonBusinessHoursColour"
+            name="ui_roster_nonBusinessHoursColour" id="ui_roster_nonBusinessHoursColour" type="color" ng-required="true" />
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="input-group col-lg-12">
+          <input class="form-control fc-col-3" ng-model="editModel.propertyText.ui.roster.selectedTimeSegmentColour"
+            name="ui_roster_selectedTimeSegmentColour" id="ui_roster_selectedTimeSegmentColour" type="text" ng-required="true" min="2"
+            max="20" /> <input class="form-control fc-col-9" ng-model="editModel.propertyText.ui.roster.selectedTimeSegmentColour"
+            name="ui_roster_selectedTimeSegmentColour" id="ui_roster_selectedTimeSegmentColour" type="color" ng-required="true" />
+        </div>
+      </div>
+    </div>
+    <div class="form-row"></div>
+    <div class="form-row"></div>
+
+
+    <h4 translate="labels.uiColours.openingHours"></h4>
+
+    <div class="row">
+      <div class="col-lg-5">
+        <label class="control-label" translate="types.ApplicationConfig.ui.openingHours.calendarBackgroundColour"></label>
+      </div>
+      <div class="col-lg-5">
+        <label class="control-label" translate="types.ApplicationConfig.ui.openingHours.businessHoursTimeSegmentColour"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-5">
+        <div class="input-group col-lg-12">
+          <input class="form-control fc-col-3" ng-model="editModel.propertyText.ui.openingHours.calendarBackgroundColour"
+            name="ui_openingHours_calendarBackgroundColour" id="ui_openingHours_calendarBackgroundColour" type="text" ng-required="true" min="2"
+            max="20" /> <input class="form-control fc-col-9" ng-model="editModel.propertyText.ui.openingHours.calendarBackgroundColour"
+            name="ui_openingHours_calendarBackgroundColour" id="ui_openingHours_calendarBackgroundColour" type="color" ng-required="true" />
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="input-group col-lg-12">
+          <input class="form-control fc-col-3" ng-model="editModel.propertyText.ui.openingHours.businessHoursTimeSegmentColour"
+            name="ui_openingHours_businessHoursTimeSegmentColour" id="ui_openingHours_businessHoursTimeSegmentColour" type="text" ng-required="true" min="2"
+            max="20" /> <input class="form-control fc-col-9" ng-model="editModel.propertyText.ui.openingHours.businessHoursTimeSegmentColour"
+            name="ui_openingHours_businessHoursTimeSegmentColour" id="ui_openingHours_businessHoursTimeSegmentColour" type="color" ng-required="true" />
+        </div>
+      </div>
+    </div>
+    <div class="form-row"></div>
+
+    <div class="row">
+      <div class="col-lg-5">&nbsp;
+      </div>
+      <div class="col-lg-5">
+        <label class="control-label" translate="types.ApplicationConfig.ui.openingHours.selectedTimeSegmentColour"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-5">&nbsp;
+      </div>
+      <div class="col-lg-5">
+        <div class="input-group col-lg-12">
+          <input class="form-control fc-col-3" ng-model="editModel.propertyText.ui.openingHours.selectedTimeSegmentColour"
+            name="ui_openingHours_selectedTimeSegmentColour" id="ui_openingHours_selectedTimeSegmentColour" type="text" ng-required="true" min="2"
+            max="20" /> <input class="form-control fc-col-9" ng-model="editModel.propertyText.ui.openingHours.selectedTimeSegmentColour"
+            name="ui_openingHours_selectedTimeSegmentColour" id="ui_openingHours_selectedTimeSegmentColour" type="color" ng-required="true" />
+        </div>
+      </div>
+    </div>
+    <div class="form-row"></div>
+
+
+  </form>
+</div>

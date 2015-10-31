@@ -1,0 +1,21 @@
+{
+	"page":{
+		"title":"{{system}} - Clients"
+	},
+	"pages":{
+		"listClients":{
+			"title":"Client Administration"
+		},
+		"editClient":{
+			"newTitle":"New Client",
+			"editTitle":"Edit Client",
+			"viewTitle":"View Client",
+			"addPhoneNumber":"Add a phone number",
+			"noPhoneNumbers":"No phone numbers"
+		}
+
+	},
+	"actions":{
+		"newClient":"New Client"
+	}
+}

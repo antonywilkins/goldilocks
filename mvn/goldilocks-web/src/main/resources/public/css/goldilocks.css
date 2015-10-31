@@ -1,0 +1,632 @@
+
+html, body {
+	position: relative;
+	height: 100%;
+	font-family: "Open Sans";
+}
+
+.img-center-container {
+	min-width: 40px;
+	height: 100%;
+	position: relative;
+}
+
+.img-center {
+	height: auto;
+	display: block;
+	margin: 0 auto;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-right: -50%;
+	transform: translate(-50%, -50%);
+}
+
+#wrapper {
+	min-height: 100%;
+	position: relative;
+	padding-bottom: 120px;
+}
+
+.timepicker-spinner-btn {
+    width: 23px;
+    height: 23px !important;
+    padding-left: 5px;
+    padding-top: 2px;
+}
+
+.timepicker-control {
+	width: 34px;
+    height: 28px;
+}
+
+.timepicker-meridian-control {
+	padding-left: 7px;
+	height: 28px !important;
+}
+
+.opening-hours-cell {
+	margin-top: 5px;
+}
+.opening-hours-header {
+}
+.opening-hours-footer {
+	margin-top: 16px;
+}
+
+
+
+
+.busy-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1040;
+  background-color: #808080;
+  filter: alpha(opacity=50);
+  opacity: .5;
+}
+.busy-img {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1050;
+  display: none;
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+  outline: 0;
+}
+.animate-if.ng-enter, .animate-if.ng-leave {
+  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+}
+
+.animate-if.ng-enter,
+.animate-if.ng-leave.ng-leave-active {
+  opacity:0;
+}
+
+.animate-if.ng-leave,
+.animate-if.ng-enter.ng-enter-active {
+  opacity:1;
+}
+
+.footer {
+	border-top: 20px solid white;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+	padding-top: 2em;
+	background-color: #333;
+	color: white;
+	padding-bottom: 2em;
+}
+
+.header-fixed {
+	position: fixed;
+	z-index: 1000;
+	top: 0;
+	left: 0;
+	right: 0;
+}
+
+.header-branding {
+	min-height: 41px !important;
+}
+
+@media (min-width: 768px) {
+  .navbar {
+    border-radius: 0px !important;
+  }
+}
+
+.navbar-brand>h1, .navbar-brand>h2, .navbar-brand>h3, .navbar-brand>h4 {
+	border-top: none !important;
+	padding-top: 0px !important;;
+}
+
+.navbar-brand>h1, .navbar-brand>h2 {
+	margin-top: 0px !important;
+}
+
+.navbar-brand>h3, .navbar-brand>h4 {
+	margin-top: 5px !important;
+}
+
+.header .brand {
+	padding-top: 6px;
+	padding-bottom: 0px;
+}
+
+.header .brand img {
+	margin-top: 5px;
+	height: 30px;
+}
+
+/* end: Logo */
+
+.nav.navbar-nav li.dropdown {
+    white-space: nowrap;
+}
+
+.spacer {
+	height: 1em;
+}
+
+.nav-index-section a {
+	font-weight: bold;
+	color: black !important;
+	margin-top: 10px;
+	display: block;
+}
+
+.nav-index-group {
+	margin-bottom: 20px !important;
+}
+
+.nav-index-group-heading {
+	color: #6F0101;
+	font-weight: bold;
+	font-size: 1.2em;
+	padding: 0;
+	margin: 0;
+	border-bottom: 1px soild #aaa;
+	margin-bottom: 5px;
+}
+
+.nav-index-group .nav-index-listing.current a {
+	color: #B52E31;
+}
+
+pre {
+	white-space: pre-wrap;
+	word-break: normal;
+}
+
+p>code, code.highlighted {
+	background: #f4f4f4;
+	border-radius: 5px;
+	padding: 2px 5px;
+	color: maroon;
+}
+
+ul+p {
+	margin-top: 10px;
+}
+
+.main-body-grid {
+	margin-top: 70px;
+	position: relative;
+}
+
+.main-body-grid>.grid-left, .main-body-grid>.grid-right {
+	padding: 20px 0;
+}
+
+.main-body-grid>.grid-left {
+	position: fixed;
+	top: 120px;
+	bottom: 0;
+	overflow: auto;
+}
+
+.main-header-grid>.grid-left, .main-body-grid>.grid-left {
+	width: 260px;
+}
+
+.main-header-grid>.grid-right, .main-body-grid>.grid-right {
+	margin-left: 270px;
+	position: relative;
+}
+
+.main-header-grid>.grid-left {
+	float: left;
+}
+
+.main-body-grid .side-navigation {
+	position: relative;
+	padding-bottom: 120px;
+}
+
+.main-body-grid .side-navigation.ng-hide {
+	display: block !important;
+}
+
+.flt-rt {
+	float: right;
+}
+
+.form-group>li {
+	list-style: none;
+}
+
+.form-inline-vertical.form-inline .form-control {
+	width: 100%;
+}
+
+.form-row {
+	margin-bottom: 15px;
+}
+
+
+  .form-control.fc-col-12 {
+    width: 100%;
+  }
+  .form-control.fc-col-11 {
+    width: 91.66666667%;
+  }
+  .form-control.fc-col-10 {
+    width: 83.33333333%;
+  }
+  .form-control.fc-col-9 {
+    width: 75%;
+  }
+  .form-control.fc-col-8 {
+    width: 66.66666667%;
+  }
+  .form-control.fc-col-7 {
+    width: 58.33333333%;
+  }
+  .form-control.fc-col-6 {
+    width: 50%;
+  }
+  .form-control.fc-col-5 {
+    width: 41.66666667%;
+  }
+  .form-control.fc-col-4 {
+    width: 33.33333333%;
+  }
+  .form-control.fc-col-3 {
+    width: 25%;
+  }
+  .form-control.fc-col-2 {
+    width: 16.66666667%;
+  }
+  .form-control.fc-col-1 {
+    width: 8.33333333%;
+  }
+
+
+.col-weekday {
+	width: 14%;
+	float: left;
+}
+
+.col-calendar {
+	float: left;
+}
+
+.col-inner {
+ 	margin-left: 5px;
+ 	margin-right: 5px;
+}
+
+.col-calendar-header {
+	min-height: 40px;
+	max-height: 40px;
+	height: 40px;
+}
+
+.col-calendar-header .col-header-inner {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
+}
+
+.col-no-padding {
+	padding-right: 0px;
+	padding-left: 0px;
+}
+
+.col-no-padding-next {
+	padding-right: 0px;
+}
+
+.col-no-padding-previous {
+	padding-left: 0px;
+}
+
+.col-close-padding {
+	padding-right: 5px;
+	padding-left: 5px;
+}
+
+.col-close-padding-next {
+	padding-right: 5px;
+}
+
+.col-close-padding-previous {
+	padding-left: 5px;
+}
+
+.btn {
+	border: 1px solid #e5e5e5;
+	font-weight: 600;
+	height: auto;
+}
+
+.btn.btn-primary {
+	color: #FFF;
+}
+
+.btn+.btn {
+	margin-left: 10px;
+}
+
+.btn-xxs, .btn-group-xxs>.btn {
+	width: 18px;
+	height: 18px;
+	padding-top: 0px !important;
+	padding-bottom: 0px !important;
+	padding-left: : 0px !important;
+	padding-right: 0px !important;
+	margin-top: -4px !important;
+	margin-bottom: 0px !important;
+	margin-left: : 0px !important;
+	margin-right: -10px !important;
+	font-size: 16px !important;
+	line-height: 1.5 !important;
+	border-radius: 1px !important;
+}
+
+.btn:hover, .btn:focus {
+	color: black !important;
+	border: 1px solid #ddd !important;
+	background: white !important;
+}
+
+.navbar-nav>li>button {
+	margin-top: 8px;
+	margin-bottom: 8px;
+	margin-left: 8px;
+}
+
+.navbar-nav>li>.btn {
+	color: #f2f2f2 !important;
+	border: 1px solid #f2f2f2 !important;
+	background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #9d9d9d), color-stop(100%, #6d6d6d)) !important;
+	background-image: -webkit-linear-gradient(#9d9d9d, #6d6d6d) !important;
+	background-image: -moz-linear-gradient(#9d9d9d, #6d6d6d) !important;
+	background-image: -o-linear-gradient(#9d9d9d, #6d6d6d) !important;
+	background-image: linear-gradient(#9d9d9d, #6d6d6d) !important;
+}
+
+.navbar-nav>li>.btn.btn-primary {
+	color: #3c3c3c !important;
+	border: 1px solid #f2f2f2 !important;
+	background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f2f2f2), color-stop(100%, #e5e5e5)) !important;
+	background-image: -webkit-linear-gradient(#f2f2f2, #e5e5e5) !important;
+	background-image: -moz-linear-gradient(#f2f2f2, #e5e5e5) !important;
+	background-image: -o-linear-gradient(#f2f2f2, #e5e5e5) !important;
+	background-image: linear-gradient(#f2f2f2, #e5e5e5) !important;
+}
+
+.navbar-nav>li>.btn:hover, .navbar-nav>li>.btn:focus {
+	color: #e5e5e5 !important;
+	border: 1px solid #e5e5e5 !important;
+	background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #3c3c3c), color-stop(100%, #202020)) !important;
+	background-image: -webkit-linear-gradient(#3c3c3c, #202020) !important;
+	background-image: -moz-linear-gradient(#3c3c3c, #202020) !important;
+	background-image: -o-linear-gradient(#3c3c3c, #202020) !important;
+	background-image: linear-gradient(#3c3c3c, #202020) !important;
+	border: 1px solid #9d9d9d !important;
+}
+
+th>a {
+	color: #333 !important;
+}
+
+th>a:hover, thead>a:hover, th>a:focus, thead>a:focus {
+	color: #6d6d6d !important;
+	text-decoration: none !important;
+	cursor: pointer !important;
+}
+
+input,textarea,select {
+	padding-left: 2px !important;
+	padding-right: 2px !important;
+	padding-top: 1px !important;
+	padding-bottom: 1px !important;
+}
+
+.msg-error {
+  color: #a94442;
+}
+
+select.ng-valid.ng-touched:not(.ng-pristine), textarea.ng-valid.ng-touched:not(.ng-pristine), input.ng-valid.ng-touched:not(.ng-pristine),
+	select.ng-valid.ng-touched:focus, textarea.ng-valid.ng-touched:focus,
+	input.ng-valid.ng-touched:focus {
+	outline: 0;
+	/* outline: thin dotted \9;*/
+	border-color: rgba(82, 168, 82, 0.8);
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 82, 0.6);
+	-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 82, 0.6);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 82, 0.6);
+}
+
+div.ng-invalid, select.ng-invalid, textarea.ng-invalid, input.ng-invalid,
+	select.ng-invalid:focus, textarea.ng-invalid:focus, input.ng-invalid:focus
+	{
+	outline: 0;
+	/* outline: thin dotted \9;*/
+	border-color: rgba(236, 82, 82, 0.8);
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
+		rgba(236, 82, 82, 0.6);
+	-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
+		rgba(236, 82, 82, 0.6);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
+		rgba(236, 82, 82, 0.6);
+}
+
+.pagination>li>span>input, .pagination>li>span>input.ng-valid.ng-touched {
+	border: 1px #e4e4e4 solid !important;
+	margin-top: -4px !important;
+	box-shadow: none !important;
+	height: 20px;
+	padding: 0px !important;
+	margin-bottom: -4px !important;
+}
+
+.pagination>li>span>select, .pagination>li>span>select.ng-valid.ng-touched {
+	border: 1px #e4e4e4 solid !important;
+	margin-top: -4px !important;
+	box-shadow: none !important;
+	height: 20px;
+	padding: 0px !important;
+	margin-bottom: -4px !important;
+}
+
+.position-fixed {
+  position: fixed;
+}
+
+.modal-backdrop {
+	opacity: 0.8;
+}
+
+.modal-dialog {
+	margin: 80px auto;
+}
+
+/* ng-animate*/
+.ng-fade.ng-enter {
+	transition: 0.25s linear all;
+	opacity: 0;
+}
+
+/* The starting CSS styles for the enter animation */
+.ng-fade.ng-enter.ng-enter-active {
+	opacity: 1;
+}
+
+.ng-fade.ng-leave {
+	transition: 0.25s linear all;
+	opacity: 1;
+}
+
+.ng-fade.ng-leave.ng-leave-active {
+	opacity: 0;
+}
+
+.context-menu-content {
+	z-index: 20;
+}
+
+.pointer {
+	cursor: pointer;
+}
+
+/*
+Calendar
+*/
+
+.calendar-panel {
+}
+
+/* make the content area fill the time period so we can make it all right clickable */
+.fc-content {
+	height: 100%;
+}
+
+/* turn off headers */
+.fc-agenda-view thead {
+	display: none;
+}
+
+/* turn off axis view day column */
+.fc-appointmentsDayAxis-view .fc-time-grid .fc-slats table tbody tr td:nth-child(2) {
+	display : none;
+}
+
+/* turn off axis view background */
+.fc-appointmentsDayAxis-view .fc-time-grid .fc-bg {
+	display: none;
+}
+
+/* turn off day view axis column */
+.fc-appointmentsDay-view .fc-time-grid .fc-slats table tbody tr td:nth-child(1) {
+	display : none;
+}
+.fc-appointmentsDay-view .fc-time-grid .fc-bg table tbody tr td:nth-child(1) {
+	display: none;
+}
+.fc-appointmentsDay-view .fc-time-grid .fc-content-skeleton table tbody tr td:nth-child(1) {
+	display: none;
+}
+
+
+
+/*
+responsive to screen size
+*/
+@media only screen and (min-width: 769px) and (max-width: 991px) {
+	.main-body-grid {
+		margin-top: 160px;
+	}
+	.main-body-grid>.grid-left {
+		top: 160px;
+	}
+}
+
+@media only screen and (max-width : 768px) {
+	.main-body-grid {
+		margin-top: 0;
+	}
+	.main-header-grid>.grid-left, .main-body-grid>.grid-left,
+		.main-header-grid>.grid-right, .main-body-grid>.grid-right {
+		display: block;
+		float: none;
+		width: auto !important;
+		margin-left: 0;
+	}
+	.main-body-grid>.grid-left, .header-fixed, .footer {
+		position: static !important;
+	}
+	.main-body-grid>.grid-left {
+		background: #efefef;
+		margin-left: -1em;
+		margin-right: -1em;
+		padding: 1em;
+		width: auto !important;
+		overflow: visible;
+	}
+	.main-header-grid>.grid-right, .main-body-grid>.grid-right {
+		margin-left: 0;
+	}
+	.main-body-grid .side-navigation {
+		display: block !important;
+		padding-bottom: 50px;
+	}
+	.main-body-grid .side-navigation.ng-hide {
+		display: none !important;
+	}
+	.nav-index-group .nav-index-listing {
+		display: inline-block;
+		padding: 3px 0;
+	}
+	.nav-index-group .nav-index-listing:not (.nav-index-section ):after {
+		padding-right: 5px;
+		margin-left: -3px;
+		content: ",  ";
+	}
+	.nav-index-group .nav-index-listing:last-child:after {
+		content: "";
+		display: inline-block;
+	}
+	.nav-index-group .nav-index-section {
+		display: block;
+	}
+	.navbar-brand {
+		/* float: none;
+		text-align: center;*/
+	}
+	#wrapper {
+		padding-bottom: 0px;
+	}
+}

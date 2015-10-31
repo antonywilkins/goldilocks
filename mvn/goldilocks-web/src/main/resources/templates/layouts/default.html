@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" ng-app="goldilocks-app" ng-cloak="">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<th:block th:replace="${view} :: pre-head" />
+<title translate="system.title" translate-value-system="{{$applicationConfig.systemInfo.name}}"></title>
+<!-- css -->
+<th:block th:replace="${view} :: pre-css" />
+<th:block th:replace="layouts/common :: css" />
+<th:block th:replace="${view} :: post-css" />
+<!-- end css -->
+<!-- scripts -->
+<th:block th:replace="${view} :: pre-scripts" />
+<th:block th:replace="layouts/common :: scripts" />
+<th:block th:replace="${view} :: post-scripts" />
+<!-- end scripts -->
+<th:block th:replace="${view} :: post-head" />
+</head>
+<body>
+
+  <div class="busy-backdrop animate-if" ng-if="$busy"></div>
+  <div class="busy-img animate-if" style="display: block;" ng-if="$busy">
+    <div class="img-center-container">
+      <img class="img-center" src="/img/busy.gif" />
+    </div>
+  </div>
+
+  <div id="wrapper">
+    <!-- header -->
+    <th:block th:replace="layouts/common :: header" />
+    <section role="main" class="container">
+      <div class="main-body main-body-grid">
+        <!-- content -->
+        <th:block th:replace="${view} :: content" />
+      </div>
+    </section>
+    <!-- footer -->
+    <th:block th:replace="layouts/common :: footer" />
+  </div>
+</body>
+</html>

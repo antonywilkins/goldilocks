@@ -1,0 +1,25 @@
+{
+	"page":{
+		"title":"{{system}} - Log In"
+	},
+	"pages":{
+		"logIn":{
+			"labels":{
+				"header":"Log In"
+			}
+		}
+	},
+	"actions":{
+		"account":{
+			"logIn":"Log In"
+		}
+	},
+	"messages":{
+		"account":{
+			"logIn":{
+				"badCredentials":"Invalid user id and/or password.",
+				"loggedOut":"You have been logged out"
+			}
+		}
+	}
+}

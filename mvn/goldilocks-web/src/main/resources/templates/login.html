@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" ng-app="goldilocks-app" ng-cloak="">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title translate="page.title" translate-value-system="{{$applicationConfig.systemInfo.name}}"></title>
+<!-- css -->
+<th:block th:replace="layouts/common :: css" />
+<!-- end css -->
+<!-- scripts -->
+<th:block th:replace="layouts/common :: scripts" />
+<script type="text/javascript" src="/js/goldilocks-app-login.js"></script>
+<!-- end scripts -->
+</head>
+<body>
+  <div id="wrapper">
+    <!-- header -->
+    <th:block th:replace="layouts/common :: header" />
+    <section role="main" class="container">
+      <div class="main-body main-body-grid">
+        <!-- content -->
+
+
+        <h1 translate="pages.logIn.labels.header"></h1>
+
+
+        <form th:action="@{/login}" method="post" class="form-vertical">
+
+          <div class="row">
+            <div class="col-lg-4">
+              <label class="control-label" translate="types.User.id"></label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="form-group">
+                <input class="form-control" id="username" name="username" type="text" required="true" min="2" max="80" />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-4">
+              <label class="control-label" translate="types.User.password"></label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="form-group">
+                <input class="form-control" id="password" name="password" type="password" required="true" min="2" max="80" />
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="form-group">
+              <button type="submit" class="btn btn-default">
+                <span translate="actions.account.logIn"></span>
+              </button>
+              </div>
+            </div>
+          </div>
+
+        </form>
+
+
+        <div th:if="${param.error}">
+          <div class="col-lg-offset-2 col-lg-8 msg-block">
+            <span translate="messages.account.logIn.badCredentials"></span>
+          </div>
+        </div>
+        <div th:if="${param.logout}">
+          <div class="col-lg-offset-2 col-lg-8 msg-block">
+            <span translate="messages.account.logIn.loggedOut"></span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <!-- footer -->
+    <th:block th:replace="layouts/common :: footer" />
+  </div>
+</body>
+</html>

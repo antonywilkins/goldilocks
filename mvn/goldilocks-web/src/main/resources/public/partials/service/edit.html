@@ -1,0 +1,40 @@
+<div>
+  <h2 ng-show="editModel.existing && editMode" translate="pages.editService.editTitle"></h2>
+  <h2 ng-show="editModel.existing && !editMode" translate="pages.editService.viewTitle"></h2>
+  <h2 ng-show="!editModel.existing" translate="pages.editService.newTitle"></h2>
+
+  <form name="editForm" class="form-vertical" novalidate autocomplete="off" ng-submit>
+
+
+    <div class="row">
+      <div class="col-lg-4">
+        <label class="control-label" translate="types.Service.name"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <input class="form-control" ng-model="editModel.name" id="name" type="text" ng-required="true" min="2" max="40"
+            ng-disabled="!editMode" />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <label class="control-label" translate="types.Service.description"></label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <input class="form-control" ng-model="editModel.description" id="name" type="text" ng-required="true" min="2" max="180"
+            ng-disabled="!editMode" />
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+
+</div>

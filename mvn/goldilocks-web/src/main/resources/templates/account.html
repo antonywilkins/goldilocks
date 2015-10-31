@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+  <th:block th:fragment="pre-head">
+    <title translate="page.title" translate-value-system="{{$applicationConfig.systemInfo.name}}"></title>
+  </th:block>
+
+  <th:block th:fragment="post-scripts">
+    <script type="text/javascript" src="/js/goldilocks-app-account.js"></script>
+  </th:block>
+
+  <th:block th:fragment="content">
+    <div ng-view=""></div>
+  </th:block>
+</body>
+</html>

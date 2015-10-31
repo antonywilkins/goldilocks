@@ -1,0 +1,33 @@
+<div>
+  <h2 translate="pages.listUsers.title"></h2>
+
+  <form name="searchForm" class="form-inline" novalidate autocomplete="off" ng-submit></form>
+
+  <qn-paginate page-model="pageInfo" page-changed="pageChanged()" show-sizer="true"></qn-paginate>
+  <qn-filter filter-model="pageInfo"filter-changed="pageChanged()"></qn-filter>
+
+  <div class="table-responsive col-lg-12">
+    <table class="table table-condensed table-striped table-hover">
+      <thead>
+        <tr>
+          <th class="col-lg-3"><a ng-click="sortBy('id')" translate="types.User.id"></a></th>
+          <th class="col-lg-3"><a ng-click="sortBy('name')" translate="types.User.name"></a></th>
+          <th class="col-lg-3" translate="labels.common.actions"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="user in pageInfo.items">
+          <td class="col-lg-3">{{user.id}}</td>
+          <td class="col-lg-3">{{user.name}}</td>
+          <td class="col-lg-3">
+            <button class="btn btn-sm btn-primary" ng-click="view(user)"><i class="glyphicon glyphicon-eye-open"></i>  <span translate="actions.common.view"></span></button>
+            <button class="btn btn-sm" ng-click="edit(user)"><i class="glyphicon glyphicon-pencil"></i> <span translate="actions.common.edit"></span></button>
+            <button class="btn btn-sm btn-danger" ng-click="remove(user)" ng-if="removeEnabled(user)"><i class="glyphicon glyphicon-trash"></i> <span translate="actions.common.delete"></span></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <qn-paginate page-model="pageInfo" page-changed="pageChanged()"></qn-paginate>
+
+</div>

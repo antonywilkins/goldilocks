@@ -1,0 +1,12 @@
+
+<div class="col-lg-3">
+  <ul class="pagination pagination-sm">
+    <li><span class="disabled"> <input ng-model="filterModel.filter" qn-change="filterChanged()"
+        qn-changes-loading="filterModel.loading" qn-change-wait-ms="{{filterWaitMs || 500}}" type="text"
+        placeholder="{{(filterPlaceholder || 'labels.common.filterPlaceholder') | translate}}"></input> <span ng-show="filterModel.loading"
+        class="glyphicon glyphicon-refresh"></span>
+        <button class="btn btn-xxs close" ng-click="filterModel.filter = null;filterChanged()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button></span></li>
+  </ul>
+</div>

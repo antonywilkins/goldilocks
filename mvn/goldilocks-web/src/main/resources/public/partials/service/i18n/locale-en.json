@@ -1,0 +1,26 @@
+{
+	"page":{
+		"title":"{{system}} - Services"
+	},
+	"pages":{
+		"listServices":{
+			"title":"Service Administration"
+		},
+		"editService":{
+			"newTitle":"New Service",
+			"editTitle":"Edit Service",
+			"viewTitle":"View Service"
+		}
+
+	},
+	"actions":{
+		"newService":"New Service"
+	},
+	"messages":{
+		"account":{
+			"edit":{
+				"name":"This service name is already taken"
+			}
+		}
+	}
+}

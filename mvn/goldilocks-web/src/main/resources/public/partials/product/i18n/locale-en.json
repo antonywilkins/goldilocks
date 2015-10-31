@@ -1,0 +1,28 @@
+{
+	"page":{
+		"title":"{{system}} - Products"
+	},
+	"pages":{
+		"listProducts":{
+			"title":"Product Administration"
+		},
+		"editProduct":{
+			"newTitle":"New Product",
+			"editTitle":"Edit Product",
+			"viewTitle":"View Product"
+		}
+
+	},
+	"actions":{
+		"newProduct":"New Product"
+	},
+	"messages":{
+		"product":{
+			"validation":{
+				"name":"This product name is already taken",
+				"priceMin":"Price cannot be negative",
+				"stockMin":"Stock cannot be negative"
+			}
+		}
+	}
+}
