@@ -2,7 +2,7 @@
 
 (function(window, moment) {
 
-  var module = angular.module("goldilocks-util", [ 'pascalprecht.translate' ]);
+  var module = angular.module("goldilocks-util", [ 'pascalprecht.translate','ngCookies' ]);
 
   qn.applicationConfigDefaults = {
     systemInfo : {
@@ -34,11 +34,12 @@
         $translateProvider.use($applicationConfig.defaultLanguage);
         $translateProvider.forceAsyncReload(true);
         $translateProvider.useSanitizeValueStrategy('sanitize');
+        $translateProvider.useLocalStorage();
       } ]);
 
   module.factory('translatePartialLoaderErrorHandler', function($q, $log) {
     return function(part, lang) {
-      $log.error('The "' + part + '/' + lang + '" part was not loaded.');
+      $log.error('The part file "/partials/' + part + '/i18n/locale-' + lang + '.json" was not loaded.');
       return $q.when({});
     };
   });

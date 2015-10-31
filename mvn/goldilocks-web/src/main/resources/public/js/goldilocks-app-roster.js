@@ -232,7 +232,74 @@
         $scope.editModel = rosterPeriod;
         $scope.regularWeek = regularWeek;
         $scope.openingHours = openingHours;
-        $scope.calendarModel = $calendarService.createMultiCalendarModel();
+
+
+
+        // set display properties from current state
+        function displayVisitor(period, calendarEvent) {
+          if (!period) {
+            return;
+          }
+          calendarEvent.color = undefined;
+
+          if (period.parent().getType() == "OpeningHoursRegularDayTimePeriods") {
+            calendarEvent.color = $applicationConfig.ui.roster.nonBusinessHoursColour;
+            calendarEvent.rendering = 'background';
+            calendarEvent.editable = false;
+          }
+
+          if (period.parent().getType() == "RosterPeriodView") {
+            calendarEvent.editable = true;
+            if ($scope.selectionModel.isSelected(period)) {
+              calendarEvent.color = $applicationConfig.ui.roster.selectedTimeSegmentColour;
+            } else {
+              calendarEvent.color = $applicationConfig.ui.roster.rosteredTimeSegmentColour;
+            }
+          }
+        }
+
+        $scope.toggleSelected = function(sourceEvent) {
+          return $scope.selectionModel.toggleSelected(sourceEvent);
+        }
+
+        // add a single calendars for the period
+        var eventSource = {
+          events : function(start, end, timezone, callback) {
+            callback($scope.editModel.timePeriods);
+          },
+          timeslotSelected : function timeslotSelected(start, end, selfCalendar, jsEvent, view) {
+            var period = new qn.domain.InstantPeriod({}, $scope.editModel);
+            period.start = start;
+            period.end = end;
+            $scope.editModel.overrideWorkingHours.push(period);
+            $scope.selectionModel.selected = period;
+            return period;
+          },
+          sourceEventObjectClicked : $scope.toggleSelected,
+          displayVisitor : displayVisitor
+        };
+
+        $scope.calendarModel = $calendarService.createCalendarModel("rosterPeriod", eventSource, {}, "appointments.week");
+
+        // initialise multi-calendar extremes (done after adding calendars so
+        // value propagates to all.
+        var hoursExtremes =
+            qn
+                .containingPeriod($scope.openingHours.timePeriods.concat($scope.regularWeek.timePeriods).concat(
+                    $scope.editModel.timePeriods));
+        $scope.calendarModel.setTimeBounds(hoursExtremes);
+
+        // update calendars from models
+        var refetchEvents = function refetchEvents() {
+          $scope.calendarModel.refetchEvents();
+        }
+        var refetchEventsAndClearSelection = function refetchEventsAndClearSelection() {
+          $scope.selectionModel.clearSelection();
+          refetchEvents();
+        }
+        $scope.editModel.addListener('reset', refetchEventsAndClearSelection);
+        $scope.editModel.addListener('refresh', refetchEventsAndClearSelection);
+
         $scope.selectionModel = $calendarSelectionModel({
           calendarModel : $scope.calendarModel,
           allowedSelectionItemFilter : function allowedSelectionItemFilter(period) {
@@ -259,69 +326,6 @@
         $calendarSelectionActions.createMergeSelectionAction($scope.selectionModel, withSiblings);
         $calendarSelectionActions.createDeleteSelectionAction($scope.selectionModel, withSiblings);
 
-        // set display properties from current state
-        function displayVisitor(period, calendarEvent) {
-          if (!period) {
-            return;
-          }
-          calendarEvent.color = undefined;
-
-          if (period.parent().getType() == "OpeningHoursRegularDayTimePeriods") {
-            calendarEvent.color = $applicationConfig.ui.roster.nonBusinessHoursColour;
-            calendarEvent.rendering = 'background';
-            calendarEvent.editable = false;
-          }
-
-          if (period.parent().getType() == "StaffRegularDayTimePeriods") {
-            calendarEvent.editable = true;
-            if ($scope.selectionModel.isSelected(period)) {
-              calendarEvent.color = $applicationConfig.ui.roster.selectedTimeSegmentColour;
-            } else {
-              calendarEvent.color = $applicationConfig.ui.roster.rosteredTimeSegmentColour;
-            }
-          }
-        }
-
-        /** initialise the calendars */
-        $scope.calendarModel.clearCalendarModels();
-
-        // add a single calendars for the period
-        var eventSource = {
-          events : function(start, end, timezone, callback) {
-            callback($scope.editModel.timePeriods);
-          },
-          timeslotSelected : function timeslotSelected(start, end, selfCalendar, jsEvent, view) {
-            var dayPeriods = $scope.editModel.overrideWorkingHours;
-            var period = new qn.domain.InstantPeriod({}, dayPeriods);
-            period.setTimes(start, end);
-            dayPeriods.periods.push(period);
-            $scope.selectionModel.selected = period;
-            return period;
-          },
-          sourceEventObjectClicked : $scope.selectionModel.toggleSelected,
-          displayVisitor : displayVisitor
-        };
-
-        var calendarModel = $scope.calendarModel.addCalendarModel("rosterPeriod", eventSource, {});
-
-        // initialise multi-calendar extremes (done after adding calendars so
-        // value propagates to all.
-        var hoursExtremes =
-            qn
-                .containingPeriod($scope.openingHours.timePeriods.concat($scope.regularWeek.timePeriods).concat(
-                    $scope.editModel.timePeriods));
-        $scope.calendarModel.setTimeBounds(hoursExtremes);
-
-        // update calendars from models
-        var refetchEvents = function refetchEvents() {
-          $scope.calendarModel.refetchEvents();
-        }
-        var refetchEventsAndClearSelection = function refetchEventsAndClearSelection() {
-          $scope.selectionModel.clearSelection();
-          refetchEvents();
-        }
-        $scope.editModel.addListener('reset', refetchEventsAndClearSelection);
-        $scope.editModel.addListener('refresh', refetchEventsAndClearSelection);
 
       } ]);
 

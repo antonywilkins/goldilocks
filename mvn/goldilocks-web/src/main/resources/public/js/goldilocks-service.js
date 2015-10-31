@@ -147,8 +147,6 @@
     value : true
   });
 
-
-
   LocalTimePeriod.prototype.setTimes = function(start, end) {
     if (start && start.start) {
       end = start.end || end;
@@ -350,7 +348,6 @@
   mixin_TimePeriodHolder(RosterPeriodView.prototype, "overrideWorkingHours", false);
   RosterPeriodView.prototype.constructor = RosterPeriodView;
 
-
   RosterPeriodView.prototype._schema = new qn.Model.Schema("RosterPeriodView");
   RosterPeriodView.prototype._schema.generateTransientId = true;
   RosterPeriodView.prototype._schema.addRelationship("staff", Staff);
@@ -358,7 +355,6 @@
   RosterPeriodView.prototype._schema.addAttribute("end", qn.Model.AttributeType.LocalDate);
   RosterPeriodView.prototype._schema.addArrayAttribute("holidays", qn.Model.AttributeType.LocalDate);
   RosterPeriodView.prototype._schema.addArrayRelationship("overrideWorkingHours", InstantPeriod, true);
-
 
   /** StaffRosterSummary */
   function StaffRosterSummary(data) {
@@ -487,7 +483,7 @@
       var bookingsUntilNow = this.parent().serviceBookingsUntil(this.serviceBooking);
       for (var s = 0; s < bookingsUntilNow.length; s++) {
         var serviceBooking = bookingsUntilNow[s];
-        var duration = serviceBooking.duration;
+        var duration = serviceBooking.asDuration;
         start.add(duration, 'milliseconds');
       }
       return start.toDate();
@@ -496,7 +492,7 @@
   Object.defineProperty(ServiceBooking.prototype, "end", {
     get : function() {
       var end = moment(this.start);
-      end.add(this.duration);
+      end.add(this.asDuration);
       return end.toDate();
     }
   });
@@ -713,13 +709,31 @@
       } ]);
   module.factory('$daysOfWeek', [ '$applicationConfig', function($applicationConfig) {
 
+    function indexOfDay(day) {
+      return qn.domain.enums.DayOfWeek.indexOf(day);
+    }
+
+    function firstDayLiteral() {
+      if ($applicationConfig.businessHours && $applicationConfig.businessHours.weekStartDay) {
+        return $applicationConfig.businessHours.weekStartDay;
+      }
+      return qn.domain.enums.DayOfWeek[0];
+    }
+
+    function indexOfFirstDay() {
+      if ($applicationConfig.businessHours && $applicationConfig.businessHours.weekStartDay) {
+        return indexOfDay(firstDayLiteral())
+      }
+      return 0;
+    }
+
     function literalsWithFirstDay(firstDay) {
-      if (!firstDay && $applicationConfig.businessHours && $applicationConfig.businessHours.weekStartDay) {
-        firstDay = $applicationConfig.businessHours.weekStartDay;
+      if (!firstDay) {
+        firstDay = firstDayLiteral();
       }
 
       var literals = qn.domain.enums.DayOfWeek.slice();
-      var start = qn.domain.enums.DayOfWeek.indexOf(firstDay);
+      var start = indexOfDay(firstDay);
       if (start > 0) {
         var first = literals.slice(start);
         literals = first.concat(literals.slice(0, start));
@@ -731,6 +745,9 @@
     var literalsSortedInitially = literalsWithFirstDay();
 
     var services = {
+      indexOfFirstDay : indexOfFirstDay,
+      indexOfDay : indexOfDay,
+      firstDayLiteral : firstDayLiteral,
       literals : literalsWithFirstDay,
       sort : function(dayOfWeek) {
         return literalsSortedInitially.indexOf(dayOfWeek);
@@ -824,25 +841,28 @@
             return services;
           } ]);
 
-  module.factory('$rosterPeriodService', [ '$serverService', function($serverService) {
-    var serviceFactory = $serverService('/service/roster/period/');
-    var services = serviceFactory.crudServices(false);
-    delete services.create;
-    delete services.remove;
-    delete services.findAll;
-    services.findByStaffAndDayBetween = serviceFactory.serviceMethod('get', 'search/findByStaffAndDayBetween', function(id, start, end, config) {
-       config = config || {};
-      config.params = config.params || {};
-      config.params.id = id;
-      config.params.start = (start ?   qn.toMoment(start) : moment()).toDate().toJavaLocalDateString();
-      config.params.end = (end ? qn.toMoment(end) : moment().add(1, 'day')).toDate().toJavaLocalDateString();
-      return config;
-    }, null, serviceFactory.transforms.result.entity);
-    services.newModel = function() {
-      return new qn.domain.RosterPeriodView();
-    };
-    return services;
-  } ]);
+  module.factory('$rosterPeriodService', [
+      '$serverService',
+      function($serverService) {
+        var serviceFactory = $serverService('/service/roster/period/');
+        var services = serviceFactory.crudServices(false);
+        delete services.create;
+        delete services.remove;
+        delete services.findAll;
+        services.findByStaffAndDayBetween =
+            serviceFactory.serviceMethod('get', 'search/findByStaffAndDayBetween', function(id, start, end, config) {
+              config = config || {};
+              config.params = config.params || {};
+              config.params.id = id;
+              config.params.start = (start ? qn.toMoment(start) : moment()).toDate().toJavaLocalDateString();
+              config.params.end = (end ? qn.toMoment(end) : moment().add(1, 'day')).toDate().toJavaLocalDateString();
+              return config;
+            }, null, serviceFactory.transforms.result.entity);
+        services.newModel = function() {
+          return new qn.domain.RosterPeriodView();
+        };
+        return services;
+      } ]);
 
   module.factory('$rosterRegularWeekService', [ '$serverService', function($serverService) {
     var serviceFactory = $serverService('/service/roster/regularWeek/');
@@ -856,28 +876,31 @@
     return services;
   } ]);
 
-  module.factory('$rosterPeriodService', [ '$serverService', function($serverService) {
-    var serviceFactory = $serverService('/service/roster/period/');
-    var services = serviceFactory.crudServices(false);
-    delete services.create;
-    delete services.remove;
-    delete services.findAll;
-    delete services.findById;
+  module.factory('$rosterPeriodService', [
+      '$serverService',
+      function($serverService) {
+        var serviceFactory = $serverService('/service/roster/period/');
+        var services = serviceFactory.crudServices(false);
+        delete services.create;
+        delete services.remove;
+        delete services.findAll;
+        delete services.findById;
 
-    services.findByStaffAndDayBetween = serviceFactory.serviceMethod('get', 'search/findByStaffAndDayBetween', function(id, start, end, config) {
-       config = config || {};
-      config.params = config.params || {};
-      config.params.id = id;
-      config.params.start = (start ?   qn.toMoment(start) : moment()).toDate().toJavaLocalDateString();
-      config.params.end = (end ? qn.toMoment(end) : moment().add(1, 'day')).toDate().toJavaLocalDateString();
-      return config;
-    }, null, serviceFactory.transforms.result.entity);
+        services.findByStaffAndDayBetween =
+            serviceFactory.serviceMethod('get', 'search/findByStaffAndDayBetween', function(id, start, end, config) {
+              config = config || {};
+              config.params = config.params || {};
+              config.params.id = id;
+              config.params.start = (start ? qn.toMoment(start) : moment()).toDate().toJavaLocalDateString();
+              config.params.end = (end ? qn.toMoment(end) : moment().add(1, 'day')).toDate().toJavaLocalDateString();
+              return config;
+            }, null, serviceFactory.transforms.result.entity);
 
-    services.newModel = function() {
-      return new qn.domain.StaffRosterWeek();
-    };
-    return services;
-  } ]);
+        services.newModel = function() {
+          return new qn.domain.StaffRosterWeek();
+        };
+        return services;
+      } ]);
 
   module.factory('$openingHoursRegularWeekService', [ '$serverService', function($serverService) {
     var serviceFactory = $serverService('/service/openingHours/regularWeek/');

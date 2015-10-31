@@ -23,11 +23,11 @@
           unselectAuto : true
         },
         appointments : {
+          // axis for the appointmentDay view - defines css classes we require for axis only - note this is designed to work with multiple calendars - e.g. those using "day" view.
           axis : {
-            columnWidth : 1,
-            defaultView : 'appointmentsDayAxis',
+            defaultView : 'appointmentsAxis',
             views : {
-              appointmentsDayAxis : {
+              appointmentsAxis : {
                 type : 'agenda',
                 duration : {
                   days : 1
@@ -35,14 +35,26 @@
               }
             }
           },
+          // day for the appointmentDay view - defines css classes we require for day column only
           day : {
-            columnWidth : 2,
             defaultView : 'appointmentsDay',
             views : {
               appointmentsDay : {
                 type : 'agenda',
                 duration : {
                   days : 1
+                }
+              }
+            }
+          },
+          // axis for the appointmentWeek view - defines css classes we require for week only - note this does not depend on the "axis" or "day" css or views
+          week : {
+            defaultView : 'appointmentsWeek',
+            views : {
+              appointmentsWeek : {
+                type : 'agenda',
+                duration : {
+                  days : 7
                 }
               }
             }
@@ -60,8 +72,9 @@
       '$http',
       '$templateCache',
       '$rootScope',
+      '$daysOfWeek',
       'uiCalendarConfig',
-      function($applicationConfig, $compile, $http, $templateCache, $rootScope, uiCalendarConfig) {
+      function($applicationConfig, $compile, $http, $templateCache, $rootScope, $daysOfWeek, uiCalendarConfig) {
 
         var eventFieldsWithoutTime =
             [ 'title', 'allDay', 'url', 'className', 'editable', 'startEditable', 'durationEditable', 'rendering', 'overlap', 'constraint',
@@ -98,6 +111,7 @@
           config.timeFormat = $applicationConfig.businessHours.use24HourClock ? 'H:mm' : 'h(:mm)a';
           config.axisFormat = $applicationConfig.businessHours.use24HourClock ? 'H:mm' : 'h(:mm)a';
           config.slotDuration = $applicationConfig.businessHours.timeSlotDuration;
+          config.firstDay = $daysOfWeek.indexOfFirstDay();
 
           return withUiConfigDefaults(config);
         }
@@ -222,9 +236,10 @@
           };
         }
 
-        function CalendarModel(key, eventSource, uiConfig) {
+        function CalendarModel(key, eventSource, uiConfig, baseConfigName) {
           this.key = key || qn.nextUid();
-          uiConfig = createUiConfig("appointments.day", uiConfig);
+          baseConfigName = baseConfigName || "appointments.day";
+          uiConfig = createUiConfig(baseConfigName, uiConfig);
           this.uiConfig = uiConfig;
           eventSource = eventSource || {};
           this.eventSource = eventSource;
@@ -475,8 +490,8 @@
           this.minTime = start;
           this.maxTime = end;
         }
-        MultiCalendarModel.prototype.addCalendarModel = function(key, eventSource, uiConfig) {
-          this.calendars[key] = new CalendarModel(key, eventSource, uiConfig);
+        MultiCalendarModel.prototype.addCalendarModel = function(key, eventSource, uiConfig, baseConfigName) {
+          this.calendars[key] = new CalendarModel(key, eventSource, uiConfig, baseConfigName);
           return this.calendars[key];
         }
         MultiCalendarModel.prototype.clearCalendarModels = function(key, eventSource, uiConfig) {
@@ -602,8 +617,18 @@
           createMultiCalendarModel : function(config) {
             return new MultiCalendarModel(config);
           },
+          createCalendarModel : function(key, eventSource, uiConfig, baseConfigName) {
+            return new CalendarModel(key, eventSource, uiConfig, baseConfigName);
+          },
           setBackgroundColour : function(c) {
             jss.set('.fc-unthemed .fc-today', {
+              'background-color' : c
+            });
+            // TODO allow config of these separately
+            jss.set('.fc-unthemed .fc-past', {
+              'background-color' : c
+            });
+            jss.set('.fc-unthemed .fc-future', {
               'background-color' : c
             });
           },

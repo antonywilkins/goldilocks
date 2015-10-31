@@ -534,18 +534,20 @@ Calendar
 	height: 100%;
 }
 
-/* turn off headers */
-.fc-agenda-view thead {
+/* turn off headers for single day views*/
+.fc-appointmentsAxis-view.fc-agenda-view thead {
+	display: none;
+}
+.fc-appointmentsDay-view.fc-agenda-view thead {
 	display: none;
 }
 
 /* turn off axis view day column */
-.fc-appointmentsDayAxis-view .fc-time-grid .fc-slats table tbody tr td:nth-child(2) {
+.fc-appointmentsAxis-view .fc-time-grid .fc-slats table tbody tr td:nth-child(2) {
 	display : none;
 }
-
 /* turn off axis view background */
-.fc-appointmentsDayAxis-view .fc-time-grid .fc-bg {
+.fc-appointmentsAxis-view .fc-time-grid .fc-bg {
 	display: none;
 }
 
@@ -560,7 +562,14 @@ Calendar
 	display: none;
 }
 
+/* when fc headers are shown... */
+.fc th.fc-day-header.fc-widget-header {
+    font-weight: normal;
+}
 
+.fc-unthemed .fc-today, .fc-unthemed .fc-past, .fc-unthemed .fc-future {
+    background-color: rgb(252, 248, 227);
+}
 
 /*
 responsive to screen size
