@@ -20,6 +20,7 @@ import goldilocks.domain.staff.rosterweekview.StaffRosterWeek;
 import goldilocks.repository.staff.StaffOverrideTimePeriodsRepository;
 import goldilocks.repository.staff.StaffRegularDayTimePeriodsRepository;
 import goldilocks.repository.staff.StaffRepository;
+import goldilocks.util.domain.DateUtil;
 import goldilocks.util.domain.InstantPeriod;
 import goldilocks.util.domain.LocalTimePeriod;
 
@@ -124,7 +125,7 @@ public class RosterService {
             }
         }
         for (InstantPeriod p : periodView.getOverrideWorkingHours()) {
-            LocalDate day = LocalDate.from(p.getStart());
+            LocalDate day = DateUtil.toLocalDate(p.getStart());
             StaffOverrideTimePeriods periods = byDate.get(day);
             if (periods == null) {
                 periods = new StaffOverrideTimePeriods();
@@ -132,7 +133,9 @@ public class RosterService {
                 periods.setDay(day);
                 byDate.put(day, periods);
             }
-            periods.addPeriod(new LocalTimePeriod(LocalTime.from(p.getStart()), LocalTime.from(p.getEnd())));
+            LocalTime start = DateUtil.toLocalTime(p.getStart());
+            LocalTime end = DateUtil.toLocalTime(p.getEnd());
+            periods.addPeriod(new LocalTimePeriod(start, end));
         }
 
         for (StaffOverrideTimePeriods existing : new ArrayList<>(existingPeriods)) {

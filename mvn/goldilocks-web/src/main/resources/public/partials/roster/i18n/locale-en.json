@@ -8,6 +8,9 @@
 		},
 		"regularDays":{
 			"title":"{{name}} - Regular Hours"
+		},
+		"rosterPeriod":{
+			"title":"{{name}} - Week"
 		}
 
 	},

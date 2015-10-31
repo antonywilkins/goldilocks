@@ -24,6 +24,9 @@ public class RosterPeriodView extends DomainTypeBase implements Serializable {
     private LocalDate start;
     private LocalDate end;
 
+    public RosterPeriodView() {
+    }
+
     public RosterPeriodView(LocalDate start, LocalDate end) {
         this.start = start;
         this.end = end;

@@ -269,8 +269,8 @@
           },
           timeslotSelected : function timeslotSelected(start, end, selfCalendar, jsEvent, view) {
             var period = new qn.domain.InstantPeriod({}, $scope.editModel);
-            period.start = start;
-            period.end = end;
+            period.start = qn.toDate(start);
+            period.end = qn.toDate(end);
             $scope.editModel.overrideWorkingHours.push(period);
             $scope.selectionModel.selected = period;
             return period;
