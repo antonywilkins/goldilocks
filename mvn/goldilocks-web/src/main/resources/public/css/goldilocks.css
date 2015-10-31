@@ -64,7 +64,7 @@ html, body {
   bottom: 0;
   left: 0;
   z-index: 1040;
-  background-color: #808080;
+  background-color: #ffffff;
   filter: alpha(opacity=50);
   opacity: .5;
 }

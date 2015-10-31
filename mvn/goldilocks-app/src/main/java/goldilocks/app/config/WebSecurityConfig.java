@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,10 +42,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //
                 .antMatchers("/web/**", "/service/**").hasAuthority("ROLE_USER")
                 //
-                .antMatchers("/css/**", "/img/**", "/favicon.*", "/js/**", "/partials/common/**", "/partials/login/**",
-                        "/templates/common/**")
-                .permitAll()
-                //
                 .anyRequest().authenticated()
                 //
                 .and().formLogin().loginPage("/login").successHandler(new ForcePasswordChangeAuthenticationSuccessHandler(authService))
@@ -55,6 +52,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // .and().requiresChannel().anyRequest().requiresSecure()
                 //
         ;
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/css/**", "/img/**", "/favicon.*", "/js/**", "/partials/common/**", "/partials/login/**",
+                "/templates/common/**");
     }
 
     @Autowired
