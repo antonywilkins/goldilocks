@@ -22,7 +22,7 @@ And of course Goldilocks itself is open source with a [public repository][github
 
 ### Installation
 ```sh
-$ git clone [git-repo-url] goldilocks
+$ git clone https://github.com/antonywilkins/goldilocks.git goldilocks
 $ cd goldilocks
 $ mvn clean install
 ```
