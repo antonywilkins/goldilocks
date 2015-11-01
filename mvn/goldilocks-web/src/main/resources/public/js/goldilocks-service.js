@@ -799,6 +799,8 @@
         calendarBackgroundColour : '#fcf8e3',
         nonBusinessHoursColour : '#3f3f3f',
         rosteredTimeSegmentColour : '#337a37',
+        regularHoursPlaceholderTimeSegmentColour : '#448b48',
+        regularHoursTimeSegmentColour : '#6C946E',
         selectedTimeSegmentColour : '#b77a33'
       },
       openingHours : {

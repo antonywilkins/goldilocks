@@ -143,7 +143,13 @@
         }
 
         function defaultDataVisitor(sourceEvent, calendarEvent, eventSource) {
+          if (sourceEvent.date && !sourceEvent.start && !sourceEvent.end) {
+            calendarEvent.allDay = true;
+            calendarEvent.date = sourceEvent.date;
+            return
+          }
           delete calendarEvent.date;
+          delete calendarEvent.allDay;
           calendarEvent.start = qn.toMoment(sourceEvent.start || sourceEvent.date);
           calendarEvent.end = qn.toMoment(sourceEvent.end);
         }
@@ -198,6 +204,9 @@
 
           eventSource.getSourceEvent = function getSourceEvent(evt) {
             return evt._originalEvent;
+          }
+          eventSource.setSourceEvent = function getSourceEvent(evt, sourceEvent) {
+            evt._originalEvent = sourceEvent;
           }
 
           eventSource.getCalendarEvent = function getCalendarEvent(evt) {
@@ -261,10 +270,12 @@
           eventSource.idGenerator = eventSource.idGenerator || defaultIdGenerator;
 
           eventSource.dataVisitor = eventSource.dataVisitor || defaultDataVisitor;
+          eventSource.defaultDataVisitor = defaultDataVisitor;
 
           eventSource.displayVisitor = eventSource.displayVisitor || defaultDisplayVisitor;
 
           eventSource.dataUpdateVisitor = eventSource.dataUpdateVisitor || defaultDataUpdateVisitor;
+          eventSource.defaultDataUpdateVisitor = defaultDataUpdateVisitor;
 
           eventSource.eventDataTransform = eventSource.eventDataTransform || createDefaultEventDataTransform(eventSource);
 
@@ -282,9 +293,22 @@
                 // up to the dataUpdateVisitor to decide to revert or not
                 return;
               }
+
+              if (qn.isObject(updated) && updated !== sourceEvent) {
+                // the dataUpdateVisitor swapped a new object in
+                eventSource.setSourceEvent(calendarEvent, updated);
+                sourceEvent = updated;
+              }
+
               if (eventSource.sourceEventObjectChanged) {
                 eventSource.sourceEventObjectChanged(sourceEvent, calendarEvent, eventSource, selfCalendar, delta, jsEvent, ui, view);
               }
+
+              if (updated == 'refetch') {
+                selfCalendar.refetchEvents();
+                return;
+              }
+
               eventSource.displayVisitor(sourceEvent, calendarEvent, eventSource, selfCalendar);
               selfCalendar.updateEvent(calendarEvent);
             }
@@ -370,13 +394,14 @@
           function defaultTimeslotSelected(start, end, jsEvent, view) {
             var sourceEvent;
             if (eventSource.timeslotSelected) {
-              sourceEvent = eventSource.timeslotSelected(start, end, selfCalendar, jsEvent, view);
+              sourceEvent =  eventSource.timeslotSelected(start, end, selfCalendar, jsEvent, view);
             }
             if (sourceEvent) {
               selfCalendar.refetchEvents();
             }
             $timeout(function() {
-              // simulate the absorbed click so that listeners for document clicks get one.
+              // simulate the absorbed click so that listeners for document
+              // clicks get one.
               angular.element(jsEvent.target).trigger('click');
             }, 100);
           }
@@ -520,10 +545,17 @@
           }
           var calendarEvent = this.eventSource.getCalendarEvent(sourceEvent);
           if (calendarEvent) {
-            if (this.eventSource._eventCache) {
-              delete this.eventSource._eventCache[calendarEvent.id];
+            if (this.eventSource.onEventRemove) {
+              this.eventSource.onEventRemove(sourceEvent, calendarEvent, this.eventSource);
             }
-            this.removeEvents(calendarEvent.id);
+            if (this.eventSource.refetchOnEventRemove) {
+              this.refetchEvents();
+            } else {
+              if (this.eventSource._eventCache) {
+                delete this.eventSource._eventCache[calendarEvent.id];
+              }
+              this.removeEvents(calendarEvent.id);
+            }
           }
         };
 
