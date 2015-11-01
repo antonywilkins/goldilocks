@@ -288,13 +288,13 @@
         var eventOverlap = function(stillEvent, movingEvent) {
           var stillEventType = stillEvent.parent().getType();
           var movingEventType = movingEvent.parent().getType();
-          var allow = stillEventType != "RosterPeriodView" || movingEventType != "RosterPeriodView";
+          var allow = (stillEventType != "OpeningHoursWeek" && stillEventType != "RosterPeriodView")  && movingEventType == "RosterPeriodView";
           return allow;
         }
 
         var selectOverlap = function(event, calendarEvent) {
           var eventType = event.parent().getType();
-          var allow = eventType != "OpeningHoursRegularDayTimePeriods" && eventType != "RosterPeriodView";
+          var allow = eventType != "OpeningHoursWeek" && eventType != "RosterPeriodView";
           return allow;
         }
 
