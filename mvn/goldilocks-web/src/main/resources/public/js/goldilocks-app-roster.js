@@ -269,7 +269,7 @@
             calendarEvent.rendering = 'background';
             calendarEvent.editable = false;
           }
-          if (period.parent().getType() == "OpeningHoursRegularDayTimePeriods") {
+          if (period.parent().getType() == "OpeningHoursWeek") {
             calendarEvent.color = $applicationConfig.ui.roster.nonBusinessHoursColour;
             calendarEvent.rendering = 'background';
             calendarEvent.editable = false;

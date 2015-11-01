@@ -195,7 +195,7 @@
   LocalTimePeriod.inverseDayPeriods = function(owner, periods) {
     var startOfDay = new qn.LocalTime(0);
     var endOfDay = new qn.LocalTime(startOfDay.asMoment.add(1, 'day'));
-    var allDayPeriod = new LocalTimePeriod({
+    var allDayPeriod = new InstantPeriod({
       start : startOfDay,
       end : endOfDay
     }, owner);
@@ -203,8 +203,16 @@
   };
 
   LocalTimePeriod.inverseDayPeriodsBetween = function(owner, periods, start, end) {
-    var periods = LocalTimePeriod.inverseDayPeriods(owner, periods);
-    return timePeriodsBetween(start, end, periods, owner);
+    if (start && start.start) {
+      end = start.end || end;
+      start = start.start;
+    }
+    var allDayPeriod = new InstantPeriod({
+      start : start,
+      end : end
+    }, owner);
+    var periods = timePeriodsBetween(start, end, periods, owner);
+    return InstantPeriod.gaps(owner, periods, allDayPeriod);
   };
 
   LocalTimePeriod.gaps = function(owner, periods, bounds) {
@@ -239,6 +247,38 @@
     return result;
   };
 
+  InstantPeriod.gaps = function(owner, periods, bounds) {
+    bounds = bounds || qn.containingPeriod(periods);
+
+    var result = [];
+    if (qn.toMilliseconds(bounds.end) - qn.toMilliseconds(bounds.start) < 0) {
+      return result;
+    }
+
+    var initialPeriod = new InstantPeriod({
+      start : bounds.start,
+      end : bounds.end
+    }, owner);
+    result[0] = initialPeriod;
+
+    periods = _.sortBy(periods, qn.toMilliseconds);
+    qn.each(periods, function(period) {
+      var currentPeriod = result[result.length - 1];
+      var gapDuration = qn.toMilliseconds(currentPeriod.end) - qn.toMilliseconds(period.start);
+      var isGap = gapDuration > 0;
+      if (isGap) {
+        currentPeriod.end = period.start;
+        currentPeriod = new InstantPeriod({
+          start : period.end,
+          end : bounds.end
+        }, owner);
+        result.push(currentPeriod);
+      }
+    });
+
+    return result;
+  };
+
   function timePeriodsBetween(start, end, periods, owner) {
     if (start.end) {
       end = start.end;
@@ -254,31 +294,29 @@
     var result = [];
     var self = this || owner;
     qn.each(periods, function(period) {
-      if (period.isTimePeriodHolder) {
-        result.push(period.timePeriodsBetween(start, end));
+
+      if (period.usesLocalTime) {
+        // expand to instant period for each day in start-end
+        var day = moment(start).startOf('day');
+        while (day.isBefore(end)) {
+          if (self.occursOnDay(day, period)) {
+            var newPeriodStart = period.start.onDate(day);
+            var newPeriodEnd = period.end.onDate(day);
+            var instantPeriod = new InstantPeriod({
+              start : qn.toDate(newPeriodStart),
+              end : qn.toDate(newPeriodEnd)
+            }, period.parent());
+            result.push(instantPeriod);
+          }
+          day = day.add(1, 'day');
+        }
       } else {
-        if (period.usesLocalTime) {
-          // expand to instant period for each day in start-end
-          var day = moment(start).startOf('day');
-          while (day.isBefore(end)) {
-            if (self.occursOnDay(day, period)) {
-              var newPeriodStart = period.start.onDate(day);
-              var newPeriodEnd = period.end.onDate(day);
-              var instantPeriod = new InstantPeriod({
-                start : qn.toDate(newPeriodStart),
-                end : qn.toDate(newPeriodEnd)
-              }, period.parent());
-              result.push(instantPeriod);
-            }
-            day = day.add(1, 'day');
-          }
-        } else {
-          // test period overlaps start-end
-          if (period.overlaps(resultPeriod)) {
-            result.push(period);
-          }
+        // test period overlaps start-end
+        if (period.overlaps(resultPeriod)) {
+          result.push(period);
         }
       }
+
     })
     return qn.flatten(result, false);
   }
