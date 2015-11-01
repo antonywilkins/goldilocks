@@ -3,7 +3,8 @@
 (function(window, angular, qn) {
 
   var module =
-      angular.module("goldilocks-util-ui", [ 'ngAnimate', 'ngSanitize', 'ngLocale', 'ui.bootstrap', 'cgNotify', 'ng-context-menu', 'goldilocks-util' ]);
+      angular.module("goldilocks-util-ui", [ 'ngAnimate', 'ngSanitize', 'ngLocale', 'ui.bootstrap', 'cgNotify', 'ng-context-menu',
+          'goldilocks-util' ]);
 
   // run
   module.run([
@@ -29,6 +30,30 @@
         });
       } ]);
 
+  module.factory('$keepAlive', [ '$keepAliveService', '$timeout', '$user', function($keepAliveService, $timeout, $user) {
+    var stayingAlive = false;
+    var timeoutPeriod;
+    function keepAlive() {
+      if (stayingAlive && $user && $user.id) {
+        timeoutPeriod = timeoutPeriod || 1000 * 60 * 10;
+        $timeout(function() {
+          if (stayingAlive && $user && $user.id) {
+            $keepAliveService.keepAlive().then(keepAlive);
+          }
+        }, timeoutPeriod);
+      }
+      return function allowToDie() {
+        stayingAlive = false;
+      }
+    }
+    function startStayingAlive(timeoutMillis) {
+      stayingAlive = true;
+      timeoutPeriod = timeoutMillis;
+      keepAlive();
+    }
+
+    return startStayingAlive;
+  } ]);
   // alert handling
   module.factory('$alertNotifier', [ '$rootScope', 'notify', function($rootScope, notify) {
 
@@ -404,11 +429,11 @@
             ngShowMethod = "enabled";
           }
 
-          element.attr("ng-show", attrs.qnAction + "." + ngShowMethod + "("+qnActionTarget+")");
-          element.attr("ng-disabled", "!" + attrs.qnAction + ".enabled("+qnActionTarget+")");
-          element.attr("ng-click", attrs.qnAction + ".performAction("+qnActionTarget+")");
-          element.attr("ng-bind-html", "" + attrs.qnAction + ".labelHtml("+qnActionTarget+")");
-          element.attr("ng-class", "" + attrs.qnAction + ".classes("+qnActionTarget+")");
+          element.attr("ng-show", attrs.qnAction + "." + ngShowMethod + "(" + qnActionTarget + ")");
+          element.attr("ng-disabled", "!" + attrs.qnAction + ".enabled(" + qnActionTarget + ")");
+          element.attr("ng-click", attrs.qnAction + ".performAction(" + qnActionTarget + ")");
+          element.attr("ng-bind-html", "" + attrs.qnAction + ".labelHtml(" + qnActionTarget + ")");
+          element.attr("ng-class", "" + attrs.qnAction + ".classes(" + qnActionTarget + ")");
           $compile(element)(scope);
         }
       }
@@ -831,24 +856,19 @@
         };
       } ]);
 
+  module.directive('qnAppendToBody', [ '$document', '$compile', '$parse', function($document, $compile, $parse) {
 
-  module.directive('qnAppendToBody',
-      ['$document', '$compile', '$parse',
-      function($document, $compile, $parse) {
-
-      return {
-        restrict: 'AC',
-        replace: false,
-        //transclude: false,
-        scope: true,
-        link: function(scope, element) {
-            element.removeAttr('qn-append-to-body');
-            //$compile(element)(scope);
-            $document.find('body').append(element);
-        }
-      };
-    }]);
-
-
+    return {
+      restrict : 'AC',
+      replace : false,
+      // transclude: false,
+      scope : true,
+      link : function(scope, element) {
+        element.removeAttr('qn-append-to-body');
+        // $compile(element)(scope);
+        $document.find('body').append(element);
+      }
+    };
+  } ]);
 
 })(window, window.angular, window.qn);

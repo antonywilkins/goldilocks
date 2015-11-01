@@ -111,18 +111,20 @@
   }
   qn.domain.Period = Period;
 
-  Period.adjacentPeriods = function(tested, periods) {
-    var result = [];
-    qn.each(periods, function(period) {
-      if (period == tested) {
-        return;
-      }
-      if (qn.toMilliseconds(period.end) == qn.toMilliseconds(tested.start) || qn.toMilliseconds(period.start) == qn.toMilliseconds(tested.end)) {
-        result.push(period);
-      }
-    });
-    return result;
-  };
+  Period.adjacentPeriods =
+      function(tested, periods) {
+        var result = [];
+        qn.each(periods, function(period) {
+          if (period == tested) {
+            return;
+          }
+          if (qn.toMilliseconds(period.end) == qn.toMilliseconds(tested.start)
+              || qn.toMilliseconds(period.start) == qn.toMilliseconds(tested.end)) {
+            result.push(period);
+          }
+        });
+        return result;
+      };
 
   Period.mergeAdjacentPeriods = function(tested, periods) {
     var result = Period.adjacentPeriods(tested, periods);
@@ -1120,6 +1122,14 @@
       config.params.text = text;
       return config;
     }, null, serviceFactory.transforms.result.pagination);
+    return services;
+  } ]);
+
+  module.factory('$keepAliveService', [ '$serverService', function($serverService) {
+    var serviceFactory = $serverService('/service/keepAlive/');
+    var services = {
+      keepAlive : serviceFactory.serviceMethod('get', '')
+    }
     return services;
   } ]);
 

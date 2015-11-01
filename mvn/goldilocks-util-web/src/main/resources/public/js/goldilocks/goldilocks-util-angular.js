@@ -316,19 +316,28 @@
         };
       } ]);
 
-  module.factory('$longRunningOperations', [ '$rootScope', function($rootScope) {
+  module.factory('$longRunningOperations', [ '$rootScope', '$timeout', function($rootScope, $timeout) {
     var operations = {};
     return {
-      start : function startLongRunningOperation(id) {
+      start : function startLongRunningOperation(delay, id) {
+        delay = delay || 100;
         id = id || qn.nextUid();
-        operations[id] = new Date();
-        $rootScope.$busy = true;
-        return id;
+
+        var promise;
+        promise = $timeout(function() {
+          operations[id] = new Date();
+          $rootScope.$busy = true;
+        }, 100);
+        promise.longRunningOperationId = id;
+
+        return promise;
       },
-      stop : function stopLongRunningOperation(id) {
-        if (!id) {
+      stop : function stopLongRunningOperation(promise) {
+        if (!promise) {
           return;
         }
+        $timeout.cancel(promise);
+        var id = promise.longRunningOperationId;
         delete operations[id];
         if (Object.keys(operations).length == 0) {
           $rootScope.$busy = false;
