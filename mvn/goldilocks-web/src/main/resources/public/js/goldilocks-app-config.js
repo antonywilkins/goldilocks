@@ -128,7 +128,7 @@
         $calendarSelectionActions.createDeleteSelectionAction($scope.selectionModel, withSiblings);
 
         // set display properties from current state
-        function displayVisitor(period, calendarEvent) {
+        function displayVisitor(period, calendarEvent, eventSource, calendar) {
           if (!period) {
             return;
           }

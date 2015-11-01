@@ -117,7 +117,7 @@
       if (period == tested) {
         return;
       }
-      if (period.end.asMilliseconds == tested.start.asMilliseconds || period.start.asMilliseconds == tested.end.asMilliseconds) {
+      if (qn.toMilliseconds(period.end) == qn.toMilliseconds(tested.start) || qn.toMilliseconds(period.start) == qn.toMilliseconds(tested.end)) {
         result.push(period);
       }
     });

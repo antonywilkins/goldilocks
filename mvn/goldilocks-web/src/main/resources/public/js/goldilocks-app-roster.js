@@ -164,7 +164,7 @@
             };
 
             // set display properties from current state
-            function displayVisitor(period, calendarEvent) {
+            function displayVisitor(period, calendarEvent, eventSource, calendar) {
               if (!period) {
                 return;
               }
@@ -244,12 +244,14 @@
       'uiCalendarConfig',
       '$calendarSelectionModel',
       '$calendarSelectionActions',
+      '$calendarContextActions',
       '$rosterPeriodService',
       'rosterPeriod',
       'regularWeek',
       'openingHours',
       function($scope, $pageContext, $editController, $dialogs, $actions, $applicationConfig, $calendarService, uiCalendarConfig,
-          $calendarSelectionModel, $calendarSelectionActions, $rosterPeriodService, rosterPeriod, regularWeek, openingHours) {
+          $calendarSelectionModel, $calendarSelectionActions, $calendarContextActions, $rosterPeriodService, rosterPeriod, regularWeek,
+          openingHours) {
 
         /** controller scope model */
         $scope.editModel = rosterPeriod.periods;
@@ -258,7 +260,7 @@
         $scope.openingHours = openingHours;
 
         // set display properties from current state
-        function displayVisitor(period, calendarEvent) {
+        function displayVisitor(period, calendarEvent, eventSource, calendar) {
           if (!period) {
             return;
           }
@@ -285,15 +287,16 @@
           }
         }
 
-        var eventOverlap = function(stillEvent, movingEvent) {
+        // constraints
+        var eventOverlap = function(stillEvent, movingEvent, eventSource) {
           var stillEventType = stillEvent.parent().getType();
           var movingEventType = movingEvent.parent().getType();
-          var allow = (stillEventType != "OpeningHoursWeek" && stillEventType != "RosterPeriodView")  && movingEventType == "RosterPeriodView";
+          var allow = (stillEventType != "OpeningHoursWeek" && stillEventType != "RosterPeriodView");
           return allow;
         }
 
-        var selectOverlap = function(event, calendarEvent) {
-          var eventType = event.parent().getType();
+        var selectOverlap = function(overlappedEvent, eventSource, calendarEvent) {
+          var eventType = overlappedEvent.parent().getType();
           var allow = eventType != "OpeningHoursWeek" && eventType != "RosterPeriodView";
           return allow;
         }
@@ -323,7 +326,9 @@
             return period;
           },
           sourceEventObjectClicked : $scope.toggleSelected,
-          displayVisitor : displayVisitor
+          displayVisitor : displayVisitor,
+          templateUrl : "/partials/roster/roster-calendar-event.html",
+          scope : $scope
         };
 
         $scope.calendarModel = $calendarService.createCalendarModel("rosterPeriod", eventSource, {}, "appointments.week");
@@ -369,6 +374,13 @@
         $calendarSelectionActions.createClearSelectionAction($scope.selectionModel);
         $calendarSelectionActions.createMergeSelectionAction($scope.selectionModel, withSiblings);
         $calendarSelectionActions.createDeleteSelectionAction($scope.selectionModel, withSiblings);
+
+        $scope.contextActions = {
+          select : $calendarContextActions.createSelectAction($scope.selectionModel),
+          unselect : $calendarContextActions.createUnselectAction($scope.selectionModel),
+          merge : $calendarContextActions.createMergeAction($scope.calendarModel, withSiblings),
+          'delete' : $calendarContextActions.createDeleteAction($scope.selectionModel, withSiblings)
+        };
 
       } ]);
 

@@ -74,12 +74,13 @@
   module.factory('$calendarService', [
       '$applicationConfig',
       '$compile',
+      '$timeout',
       '$http',
       '$templateCache',
       '$rootScope',
       '$daysOfWeek',
       'uiCalendarConfig',
-      function($applicationConfig, $compile, $http, $templateCache, $rootScope, $daysOfWeek, uiCalendarConfig) {
+      function($applicationConfig, $compile, $timeout, $http, $templateCache, $rootScope, $daysOfWeek, uiCalendarConfig) {
 
         var eventFieldsWithoutTime =
             [ 'title', 'allDay', 'url', 'className', 'editable', 'startEditable', 'durationEditable', 'rendering', 'overlap', 'constraint',
@@ -134,13 +135,20 @@
           return (type ? (type + ":") : "") + id;
         }
 
-        function defaultDataVisitor(sourceEvent, calendarEvent) {
+
+        function isSpanningMultipleDays(event) {
+          var start = qn.toMoment(event.start);
+          var end = qn.toMoment(event.end);
+          return !start.isSame(end, 'day');
+        }
+
+        function defaultDataVisitor(sourceEvent, calendarEvent, eventSource) {
           delete calendarEvent.date;
           calendarEvent.start = qn.toMoment(sourceEvent.start || sourceEvent.date);
           calendarEvent.end = qn.toMoment(sourceEvent.end);
         }
 
-        function defaultDataUpdateVisitor(sourceEvent, calendarEvent) {
+        function defaultDataUpdateVisitor(sourceEvent, calendarEvent, eventSource, selfCalendar, delta, revertFunc, jsEvent, ui, view) {
           if (sourceEvent.usesLocalTime) {
             sourceEvent.start = qn.toLocalTime(calendarEvent.start);
             sourceEvent.end = qn.toLocalTime(calendarEvent.end);
@@ -150,7 +158,7 @@
           }
         }
 
-        function defaultDisplayVisitor(sourceEvent, calendarEvent) {
+        function defaultDisplayVisitor(sourceEvent, eventSource, calendarEvent) {
         }
 
         function createDefaultEventDataTransform(eventSource) {
@@ -178,9 +186,9 @@
             // make sure the id is available to any of these calls
             transformedEvent.id = id;
             var dataVisitor = eventSource.dataVisitor || defaultDataVisitor;
-            dataVisitor(evt, transformedEvent);
+            dataVisitor(evt, transformedEvent, eventSource);
             var displayVisitor = eventSource.displayVisitor || defaultDisplayVisitor;
-            displayVisitor(evt, transformedEvent);
+            displayVisitor(evt, transformedEvent, eventSource, undefined);
             // in case one of the above carelessly overwrites with an id
             // from the source object
             transformedEvent.id = id;
@@ -264,14 +272,20 @@
           function defaultEventChanged(calendarEvent, delta, revertFunc, jsEvent, ui, view) {
             var sourceEvent = eventSource.getSourceEvent(calendarEvent);
             if (sourceEvent) {
-              var updated = eventSource.dataUpdateVisitor(sourceEvent, calendarEvent, selfCalendar, delta, revertFunc, jsEvent, ui, view);
+              if (!eventSource.allowMultiDayEvents && isSpanningMultipleDays(calendarEvent)) {
+                revertFunc();
+                return false;
+              }
+
+              var updated = eventSource.dataUpdateVisitor(sourceEvent, calendarEvent, eventSource, selfCalendar, delta, revertFunc, jsEvent, ui, view);
               if (updated === false) {
+                // up to the dataUpdateVisitor to decide to revert or not
                 return;
               }
               if (eventSource.sourceEventObjectChanged) {
-                eventSource.sourceEventObjectChanged(sourceEvent, calendarEvent, selfCalendar, delta, jsEvent, ui, view);
+                eventSource.sourceEventObjectChanged(sourceEvent, calendarEvent, eventSource, selfCalendar, delta, jsEvent, ui, view);
               }
-              eventSource.displayVisitor(sourceEvent, calendarEvent, selfCalendar);
+              eventSource.displayVisitor(sourceEvent, calendarEvent, eventSource, selfCalendar);
               selfCalendar.updateEvent(calendarEvent);
             }
           }
@@ -282,9 +296,9 @@
             var sourceEvent = eventSource.getSourceEvent(calendarEvent);
             if (sourceEvent) {
               if (eventSource.sourceEventObjectClicked) {
-                eventSource.sourceEventObjectClicked(sourceEvent, calendarEvent, selfCalendar, jsEvent, view);
+                eventSource.sourceEventObjectClicked(sourceEvent, calendarEvent, eventSource, selfCalendar, jsEvent, view);
               }
-              eventSource.displayVisitor(sourceEvent, calendarEvent);
+              eventSource.displayVisitor(sourceEvent, calendarEvent, eventSource, selfCalendar);
               selfCalendar.updateEvent(calendarEvent);
             }
           }
@@ -361,14 +375,23 @@
             if (sourceEvent) {
               selfCalendar.refetchEvents();
             }
+            $timeout(function() {
+              // simulate the absorbed click so that listeners for document clicks get one.
+              angular.element(jsEvent.target).trigger('click');
+            }, 100);
           }
           uiConfig.select = uiConfig.select || defaultTimeslotSelected;
           uiConfig.selectable = !!eventSource.timeslotSelected || !!uiConfig.select || uiConfig.selectable;
+
+          eventSource.allowMultiDayEvents = eventSource.allowMultiDayEvents || false;
 
           function wrappedEventOverlap(delegate) {
             return function(stillEvent, movingEvent) {
               var stillSourceEvent = eventSource.getSourceEvent(stillEvent);
               var movingSourceEvent = eventSource.getSourceEvent(movingEvent);
+              if (!eventSource.allowMultiDayEvents && isSpanningMultipleDays(movingSourceEvent)) {
+                return false;
+              }
               return delegate(stillSourceEvent, movingSourceEvent, stillEvent, movingEvent);
             };
           }
@@ -380,6 +403,9 @@
           function wrappedSelectOverlap(delegate) {
             return function(calendarEvent) {
               var sourceEvent = eventSource.getSourceEvent(calendarEvent);
+              if (!eventSource.allowMultiDayEvents && isSpanningMultipleDays(sourceEvent)) {
+                return false;
+              }
               return delegate(sourceEvent, calendarEvent);
             };
           }
@@ -463,7 +489,7 @@
 
             var calendarEvent = this.eventSource.getCalendarEvent(sourceEvent);
             if (calendarEvent) {
-              this.eventSource.displayVisitor(sourceEvent, calendarEvent);
+              this.eventSource.displayVisitor(sourceEvent, calendarEvent, this.eventSource, this);
 
               var clientEvent = this.getClientEvent(calendarEvent.id);
               if (clientEvent) {
