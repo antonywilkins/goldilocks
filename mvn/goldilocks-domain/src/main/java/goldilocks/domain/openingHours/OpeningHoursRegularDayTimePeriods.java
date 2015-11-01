@@ -125,7 +125,10 @@ public class OpeningHoursRegularDayTimePeriods extends DomainObjectBase<OpeningH
     }
 
     public void setPeriods(List<LocalTimePeriod> periods) {
-        this.periods = periods;
+        this.periods.clear();
+        if (periods != null) {
+            this.periods.addAll(periods);
+        }
     }
 
     @Override

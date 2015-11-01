@@ -23,7 +23,9 @@
           unselectAuto : true
         },
         appointments : {
-          // axis for the appointmentDay view - defines css classes we require for axis only - note this is designed to work with multiple calendars - e.g. those using "day" view.
+          // axis for the appointmentDay view - defines css classes we require
+          // for axis only - note this is designed to work with multiple
+          // calendars - e.g. those using "day" view.
           axis : {
             defaultView : 'appointmentsAxis',
             views : {
@@ -35,7 +37,8 @@
               }
             }
           },
-          // day for the appointmentDay view - defines css classes we require for day column only
+          // day for the appointmentDay view - defines css classes we require
+          // for day column only
           day : {
             defaultView : 'appointmentsDay',
             views : {
@@ -47,7 +50,9 @@
               }
             }
           },
-          // axis for the appointmentWeek view - defines css classes we require for week only - note this does not depend on the "axis" or "day" css or views
+          // axis for the appointmentWeek view - defines css classes we require
+          // for week only - note this does not depend on the "axis" or "day"
+          // css or views
           week : {
             defaultView : 'appointmentsWeek',
             views : {
@@ -330,15 +335,17 @@
                   } else {
                     $http.get(eventSource.templateUrl, {
                       cache : $templateCache
-                    }).then(function(response){
-                      element = buildIntoElement(response.data, element);if (element) {
+                    }).then(function(response) {
+                      element = buildIntoElement(response.data, element);
+                      if (element) {
                         compile(element);
                       }
                     });
                   }
                 }
                 if (eventSource.eventRendered) {
-                  eventSource.eventRendered(sourceEvent, element, calendarEvent, selfCalendar, view);if (element) {
+                  eventSource.eventRendered(sourceEvent, element, calendarEvent, selfCalendar, view);
+                  if (element) {
                     compile(element);
                   }
                 }
@@ -357,6 +364,29 @@
           }
           uiConfig.select = uiConfig.select || defaultTimeslotSelected;
           uiConfig.selectable = !!eventSource.timeslotSelected || !!uiConfig.select || uiConfig.selectable;
+
+          function wrappedEventOverlap(delegate) {
+            return function(stillEvent, movingEvent) {
+              var stillSourceEvent = eventSource.getSourceEvent(stillEvent);
+              var movingSourceEvent = eventSource.getSourceEvent(movingEvent);
+              return delegate(stillSourceEvent, movingSourceEvent, stillEvent, movingEvent);
+            };
+          }
+
+          if (eventSource.eventOverlap) {
+            uiConfig.eventOverlap = wrappedEventOverlap(eventSource.eventOverlap);
+          }
+
+          function wrappedSelectOverlap(delegate) {
+            return function(calendarEvent) {
+              var sourceEvent = eventSource.getSourceEvent(calendarEvent);
+              return delegate(sourceEvent, calendarEvent);
+            };
+          }
+
+          if (eventSource.selectOverlap) {
+            uiConfig.selectOverlap = wrappedSelectOverlap(eventSource.selectOverlap);
+          }
         }
         CalendarModel.prototype.setTimeBounds = function(start, end) {
           if (!start) {
@@ -853,7 +883,7 @@
             }
             var selected = calendarSelectionModel.selected;
             var periods = candidateMergeItemsGetter(selected);
-            return qn.domain.LocalTimePeriod.adjacentPeriods(selected, periods).length > 0;
+            return qn.domain.Period.adjacentPeriods(selected, periods).length > 0;
           },
           performAction : function() {
             if (!calendarSelectionModel.hasSelection()) {
@@ -862,7 +892,7 @@
             var selected = calendarSelectionModel.selected;
             var periods = candidateMergeItemsGetter(selected);
 
-            qn.domain.LocalTimePeriod.mergeAdjacentPeriods(selected, periods);
+            qn.domain.Period.mergeAdjacentPeriods(selected, periods);
             calendarSelectionModel.selected = selected;
             if (calendarSelectionModel && calendarSelectionModel.calendarModel && !calendarSelectionModel.refetchOnChange) {
               calendarSelectionModel.calendarModel.refetchEvents();
@@ -937,12 +967,12 @@
           iconClasses : "glyphicon glyphicon-transfer",
           enabled : function(target) {
             var periods = candidateMergeItemsGetter(target);
-            return qn.domain.LocalTimePeriod.adjacentPeriods(target, periods).length > 0;
+            return qn.domain.Period.adjacentPeriods(target, periods).length > 0;
           },
           performAction : function(target) {
             var periods = candidateMergeItemsGetter(target);
 
-            qn.domain.LocalTimePeriod.mergeAdjacentPeriods(target, periods);
+            qn.domain.Period.mergeAdjacentPeriods(target, periods);
             if (calendarModel) {
               calendarModel.refetchEvents();
             }

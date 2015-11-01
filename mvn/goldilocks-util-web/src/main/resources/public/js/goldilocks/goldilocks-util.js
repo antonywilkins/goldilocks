@@ -256,7 +256,7 @@
       }
     },
     onDate : function(date) {
-      date = date || new Date();
+      date = toDate(date) || new Date();
       var onDate = new LocalTime(date);
       onDate.hours = this.hours;
       onDate.minutes = this.minutes;
@@ -350,9 +350,33 @@
     return new LocalTime(endMoment);
   }
 
+  function Period() {
+  }
+  var periodContains = function(momentOrPeriod, period) {
+    if (momentOrPeriod.start) {
+      return periodContains(momentOrPeriod.start) && periodContains(momentOrPeriod.end);
+    }
+
+    var contained = qn.toMoment(momentOrPeriod);
+    var start = qn.toMoment(period.start);
+    var end = qn.toMoment(period.end);
+    return contains.isBetween(start, end);
+  }
+  var periodOverlaps =
+      function(period, another) {
+        return periodContains(another.start, period) || periodContains(another.end, period) || periodContains(period.start, another)
+            || periodContains(period.end, another);
+      };
+
   var DateTimeRange_prototype = {
     start : null,
     end : null,
+    contains : function contains(momentOrPeriod) {
+      return periodContains(momentOrPeriod, this);
+    },
+    overlaps : function overlaps(another) {
+      return periodOverlaps(this, another);
+    },
     set : function(start, end) {
       if (start && start.start) {
         end = start.end || end;
@@ -1755,6 +1779,8 @@
     normaliseOptions : normaliseOptions,
     parseBoolean : parseBoolean,
     parseQuerystring : parseQuerystring,
+    periodContains : periodContains,
+    periodOverlaps : periodOverlaps,
     removeDefaultsDeep : removeDefaultsDeep,
     removeElement : removeElement,
     removeElementOrIndex : removeElementOrIndex,

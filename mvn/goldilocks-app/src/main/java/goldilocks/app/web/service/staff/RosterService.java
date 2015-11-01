@@ -146,7 +146,6 @@ public class RosterService {
                 byDate.put(existing.getDay(), existing);
             }
         }
-
         overrideTimePeriodsRepository.delete(existingPeriods);
 
         existingPeriods = new ArrayList<>(byDate.values());

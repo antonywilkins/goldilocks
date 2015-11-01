@@ -102,6 +102,41 @@
     attributeType : qn.Model.AttributeType.JsonWithApplicationConfigDefaults
   });
 
+  /** Period type functions */
+  function overlaps(another) {
+
+  }
+
+  function Period() {
+  }
+  qn.domain.Period = Period;
+
+  Period.adjacentPeriods = function(tested, periods) {
+    var result = [];
+    qn.each(periods, function(period) {
+      if (period == tested) {
+        return;
+      }
+      if (period.end.asMilliseconds == tested.start.asMilliseconds || period.start.asMilliseconds == tested.end.asMilliseconds) {
+        result.push(period);
+      }
+    });
+    return result;
+  };
+
+  Period.mergeAdjacentPeriods = function(tested, periods) {
+    var result = Period.adjacentPeriods(tested, periods);
+    if (result.length > 0) {
+      var containingPeriod = qn.containingPeriod([ tested ].concat(result));
+      tested.start = containingPeriod.start;
+      tested.end = containingPeriod.end;
+      qn.each(result, function(p) {
+        qn.removeElement(periods, p);
+      });
+    }
+    return result;
+  };
+
   /** InstantPeriod */
   function InstantPeriod(data, parent) {
     qn.EditModel.call(this, data, parent);
@@ -167,30 +202,9 @@
     return LocalTimePeriod.gaps(owner, periods, allDayPeriod);
   };
 
-  LocalTimePeriod.adjacentPeriods = function(tested, periods) {
-    var result = [];
-    qn.each(periods, function(period) {
-      if (period == tested) {
-        return;
-      }
-      if (period.end.asMilliseconds == tested.start.asMilliseconds || period.start.asMilliseconds == tested.end.asMilliseconds) {
-        result.push(period);
-      }
-    });
-    return result;
-  };
-
-  LocalTimePeriod.mergeAdjacentPeriods = function(tested, periods) {
-    var result = LocalTimePeriod.adjacentPeriods(tested, periods);
-    if (result.length > 0) {
-      var containingPeriod = qn.containingPeriod([ tested ].concat(result));
-      tested.start = containingPeriod.start;
-      tested.end = containingPeriod.end;
-      qn.each(result, function(p) {
-        qn.removeElement(periods, p);
-      });
-    }
-    return result;
+  LocalTimePeriod.inverseDayPeriodsBetween = function(owner, periods, start, end) {
+    var periods = LocalTimePeriod.inverseDayPeriods(owner, periods);
+    return timePeriodsBetween(start, end, periods, owner);
   };
 
   LocalTimePeriod.gaps = function(owner, periods, bounds) {
@@ -225,8 +239,60 @@
     return result;
   };
 
+  function timePeriodsBetween(start, end, periods, owner) {
+    if (start.end) {
+      end = start.end;
+      start = start.start;
+    }
+    start = qn.toMoment(start);
+    end = qn.toMoment(end);
+    var resultPeriod = {
+      start : start,
+      end : end
+    };
+
+    var result = [];
+    var self = this || owner;
+    qn.each(periods, function(period) {
+      if (period.isTimePeriodHolder) {
+        result.push(period.timePeriodsBetween(start, end));
+      } else {
+        if (period.usesLocalTime) {
+          // expand to instant period for each day in start-end
+          var day = moment(start).startOf('day');
+          while (day.isBefore(end)) {
+            if (self.occursOnDay(day, period)) {
+              var newPeriodStart = period.start.onDate(day);
+              var newPeriodEnd = period.end.onDate(day);
+              var instantPeriod = new InstantPeriod({
+                start : qn.toDate(newPeriodStart),
+                end : qn.toDate(newPeriodEnd)
+              }, period.parent());
+              result.push(instantPeriod);
+            }
+            day = day.add(1, 'day');
+          }
+        } else {
+          // test period overlaps start-end
+          if (period.overlaps(resultPeriod)) {
+            result.push(period);
+          }
+        }
+      }
+    })
+    return qn.flatten(result, false);
+  }
+
   /** TimePeriodHolder mixin */
-  var TimePeriodHolder_prototype = {};
+  var TimePeriodHolder_prototype = {
+    occursOnDay : function(day, period) {
+      return true;
+    },
+    timePeriodsBetween : function(start, end) {
+      return timePeriodsBetween(start, end, this.timePeriods, this);
+    }
+  };
+
   function mixin_TimePeriodHolder(prototypeObject, periodsProperty, useLocalTime) {
     periodsProperty = periodsProperty || "periods";
     if (!qn.isFunction(periodsProperty)) {
@@ -235,9 +301,10 @@
         return this[propName];
       };
     }
+    prototypeObject._periods = periodsProperty;
     qn.mixin(prototypeObject, TimePeriodHolder_prototype);
     qn.mixinProperty("timePeriods", prototypeObject, function() {
-      var periods = periodsProperty.call(this);
+      var periods = this._periods();
       var result = [];
       qn.each(periods, function(period) {
         if (period.isTimePeriodHolder) {
@@ -272,6 +339,9 @@
     qn.mixinProperty("inverseDayPeriods", prototypeObject, function() {
       return LocalTimePeriod.inverseDayPeriods(this, this.timePeriods);
     });
+    prototypeObject.inverseDayPeriodsBetween = function(start, end) {
+      return LocalTimePeriod.inverseDayPeriodsBetween(this, this.timePeriods, start, end);
+    };
   }
 
   /** OpeningHoursRegularDayTimePeriods */
@@ -290,15 +360,26 @@
   /** OpeningHoursWeek */
   function OpeningHoursWeek(data) {
     qn.EditModel.call(this, data);
+    qn.each(this.week, function(regularPeriods, dayOfWeek) {
+      qn.each(regularPeriods.periods, function(period, idx) {
+        period.dayOfWeek = dayOfWeek;
+        period.dayOfWeekIndex = qn.domain.enums.DayOfWeek.indexOf(dayOfWeek);
+      });
+    });
   }
   qn.domain.OpeningHoursWeek = OpeningHoursWeek;
   OpeningHoursWeek.prototype = Object.create(qn.EditModel.prototype);
   mixin_TimePeriodHolder(OpeningHoursWeek.prototype, "week", true);
+  mixin_inverseDayPeriods(OpeningHoursWeek.prototype);
   OpeningHoursWeek.prototype.constructor = OpeningHoursWeek;
 
   OpeningHoursWeek.prototype._schema = new qn.Model.Schema("OpeningHoursWeek");
   OpeningHoursWeek.prototype._schema.generateTransientId = true;
   OpeningHoursWeek.prototype._schema.addMapRelationship("week", OpeningHoursRegularDayTimePeriods);
+
+  OpeningHoursWeek.prototype.occursOnDay = function(day, period) {
+    return period.dayOfWeekIndex == day.day();
+  };
 
   /** Staff */
   function Staff(data) {
@@ -327,10 +408,17 @@
   /** StaffRosterWeek */
   function StaffRosterWeek(data) {
     qn.EditModel.call(this, data);
+    qn.each(this.week, function(regularPeriods, dayOfWeek) {
+      qn.each(regularPeriods.periods, function(period, idx) {
+        period.dayOfWeek = dayOfWeek;
+        period.dayOfWeekIndex = qn.domain.enums.DayOfWeek.indexOf(dayOfWeek);
+      });
+    });
   }
   qn.domain.StaffRosterWeek = StaffRosterWeek;
   StaffRosterWeek.prototype = Object.create(qn.EditModel.prototype);
   mixin_TimePeriodHolder(StaffRosterWeek.prototype, "week", true);
+  mixin_inverseDayPeriods(StaffRosterWeek.prototype);
   StaffRosterWeek.prototype.constructor = StaffRosterWeek;
 
   StaffRosterWeek.prototype._schema = new qn.Model.Schema("StaffRosterWeek");
@@ -338,6 +426,10 @@
   StaffRosterWeek.prototype._schema.addRelationship("openingHours", OpeningHoursWeek);
   StaffRosterWeek.prototype._schema.addMapRelationship("week", StaffRegularDayTimePeriods);
   StaffRosterWeek.prototype._schema.addRelationship("staff", Staff);
+
+  StaffRosterWeek.prototype.occursOnDay = function(day, period) {
+    return period.dayOfWeekIndex == day.day();
+  };
 
   /** RosterPeriodView */
   function RosterPeriodView(data) {
@@ -703,6 +795,15 @@
             $entityDeserialiserBuilder.registerConstructor(domainTypeName, function(data) {
               return new domainType(data);
             });
+          }
+        });
+
+        // TODO needs to be called on every page load and every time the
+        // $applicationConfig item is changed.
+        moment.locale(moment.locale(), {
+          week : {
+            dow : $daysOfWeek.indexOfFirstDay(),
+            doy : moment.localeData().week.doy
           }
         });
 

@@ -26,14 +26,34 @@
       templateUrl : '/partials/roster/rosterPeriod.html',
       controller : 'RosterPeriodController',
       resolve : {
-        rosterPeriod : function($route, $rosterPeriodService) {
+        rosterPeriod : function($route, $rosterPeriodService, $daysOfWeek) {
           var id = $route.current.params.id;
           var start = $route.current.params.date;
+
+          var today = moment();
           if (start == "today") {
-            start = new Date();
+            start = today;
+          } else {
+            start = qn.toMoment($route.current.params.date);
           }
-          var end = null;
-          return $rosterPeriodService.findByStaffAndDayBetween(id, start, end);
+
+          var periodType = $route.current.params.periodType || 'week';
+          periodType = periodType.toLowerCase();
+          if ([ 'week', 'month', 'year' ].indexOf(periodType) < 0) {
+            periodType = 'week';
+          }
+
+          start.startOf(periodType);
+          var end = moment(start).add(1, periodType);
+          return $rosterPeriodService.findByStaffAndDayBetween(id, start, end).then(function(periods) {
+            return {
+              start : start,
+              end : end,
+              periodType : periodType,
+              periods : periods
+            };
+          });
+
         },
         regularWeek : function($route, $rosterRegularWeekService) {
           var id = $route.current.params.id;
@@ -86,129 +106,132 @@
 
       } ]);
 
-  module.controller('RegularDaysController', [
-      '$scope',
-      '$pageContext',
-      '$editController',
-      '$dialogs',
-      '$actions',
-      '$applicationConfig',
-      '$calendarService',
-      'uiCalendarConfig',
-      '$calendarSelectionModel',
-      '$calendarSelectionActions',
-      '$calendarContextActions',
-      '$rosterRegularWeekService',
-      'regularWeek',
-      'openingHours',
-      function($scope, $pageContext, $editController, $dialogs, $actions, $applicationConfig, $calendarService, uiCalendarConfig,
-          $calendarSelectionModel, $calendarSelectionActions, $calendarContextActions, $rosterRegularWeekService, regularWeek, openingHours) {
+  module.controller('RegularDaysController',
+      [
+          '$scope',
+          '$pageContext',
+          '$editController',
+          '$dialogs',
+          '$actions',
+          '$applicationConfig',
+          '$calendarService',
+          'uiCalendarConfig',
+          '$calendarSelectionModel',
+          '$calendarSelectionActions',
+          '$calendarContextActions',
+          '$rosterRegularWeekService',
+          'regularWeek',
+          'openingHours',
+          function($scope, $pageContext, $editController, $dialogs, $actions, $applicationConfig, $calendarService, uiCalendarConfig,
+              $calendarSelectionModel, $calendarSelectionActions, $calendarContextActions, $rosterRegularWeekService, regularWeek,
+              openingHours) {
 
-        /** controller scope model */
-        $scope.editModel = regularWeek;
-        $scope.openingHours = openingHours;
-        $scope.calendarModel = $calendarService.createMultiCalendarModel();
-        $scope.selectionModel = $calendarSelectionModel({
-          calendarModel : $scope.calendarModel,
-          allowedSelectionItemFilter : function allowedSelectionItemFilter(period) {
-            if (!period) {
-              return false;
+            /** controller scope model */
+            $scope.editModel = regularWeek;
+            $scope.openingHours = openingHours;
+            $scope.calendarModel = $calendarService.createMultiCalendarModel();
+            $scope.selectionModel = $calendarSelectionModel({
+              calendarModel : $scope.calendarModel,
+              allowedSelectionItemFilter : function allowedSelectionItemFilter(period) {
+                if (!period) {
+                  return false;
+                }
+                return period.parent().getType() == "StaffRegularDayTimePeriods";
+              }
+            });
+
+            /** page actions */
+            $pageContext.clearPageActions();
+            $editController.createPageActions($scope.editModel, function() {
+              return $scope.editForm;
+            }, $rosterRegularWeekService);
+
+            function withSiblings(period) {
+              if (!period) {
+                return [];
+              }
+              return period.parent().periods;
             }
-            return period.parent().getType() == "StaffRegularDayTimePeriods";
-          }
-        });
+            $calendarSelectionActions.createClearSelectionAction($scope.selectionModel);
+            $calendarSelectionActions.createMergeSelectionAction($scope.selectionModel, withSiblings);
+            $calendarSelectionActions.createDeleteSelectionAction($scope.selectionModel, withSiblings);
 
-        /** page actions */
-        $pageContext.clearPageActions();
-        $editController.createPageActions($scope.editModel, function() {
-          return $scope.editForm;
-        }, $rosterRegularWeekService);
+            $scope.contextActions = {
+              select : $calendarContextActions.createSelectAction($scope.selectionModel),
+              unselect : $calendarContextActions.createUnselectAction($scope.selectionModel),
+              merge : $calendarContextActions.createMergeAction($scope.calendarModel, withSiblings),
+              'delete' : $calendarContextActions.createDeleteAction($scope.selectionModel, withSiblings)
+            };
 
-        function withSiblings(period) {
-          if (!period) {
-            return [];
-          }
-          return period.parent().periods;
-        }
-        $calendarSelectionActions.createClearSelectionAction($scope.selectionModel);
-        $calendarSelectionActions.createMergeSelectionAction($scope.selectionModel, withSiblings);
-        $calendarSelectionActions.createDeleteSelectionAction($scope.selectionModel, withSiblings);
+            // set display properties from current state
+            function displayVisitor(period, calendarEvent) {
+              if (!period) {
+                return;
+              }
+              calendarEvent.color = undefined;
 
-        $scope.contextActions = {
-          select : $calendarContextActions.createSelectAction($scope.selectionModel),
-          unselect : $calendarContextActions.createUnselectAction($scope.selectionModel),
-          merge : $calendarContextActions.createMergeAction($scope.calendarModel, withSiblings),
-          'delete' : $calendarContextActions.createDeleteAction($scope.selectionModel, withSiblings)
-        };
+              if (period.parent().getType() == "OpeningHoursRegularDayTimePeriods") {
+                calendarEvent.color = $applicationConfig.ui.roster.nonBusinessHoursColour;
+                calendarEvent.rendering = 'background';
+                calendarEvent.editable = false;
+              }
 
-        // set display properties from current state
-        function displayVisitor(period, calendarEvent) {
-          if (!period) {
-            return;
-          }
-          calendarEvent.color = undefined;
-
-          if (period.parent().getType() == "OpeningHoursRegularDayTimePeriods") {
-            calendarEvent.color = $applicationConfig.ui.roster.nonBusinessHoursColour;
-            calendarEvent.rendering = 'background';
-            calendarEvent.editable = false;
-          }
-
-          if (period.parent().getType() == "StaffRegularDayTimePeriods") {
-            calendarEvent.editable = true;
-            if ($scope.selectionModel.isSelected(period)) {
-              calendarEvent.color = $applicationConfig.ui.roster.selectedTimeSegmentColour;
-            } else {
-              calendarEvent.color = $applicationConfig.ui.roster.rosteredTimeSegmentColour;
+              if (period.parent().getType() == "StaffRegularDayTimePeriods") {
+                calendarEvent.editable = true;
+                if ($scope.selectionModel.isSelected(period)) {
+                  calendarEvent.color = $applicationConfig.ui.roster.selectedTimeSegmentColour;
+                } else {
+                  calendarEvent.color = $applicationConfig.ui.roster.rosteredTimeSegmentColour;
+                }
+              }
             }
-          }
-        }
 
-        /** initialise the calendars */
-        $scope.calendarModel.clearCalendarModels();
+            /** initialise the calendars */
+            $scope.calendarModel.clearCalendarModels();
 
-        // add individual day calendars
-        qn.each($scope.editModel.week, function(regularPeriods, dayOfWeek) {
-          var eventSource = {
-            events : function(start, end, timezone, callback) {
-              var rosterPeriods = $scope.editModel.week[dayOfWeek].periods;
-              var nonOpeningHoursPeriods = $scope.openingHours.week[dayOfWeek].inverseDayPeriods;
-              callback(rosterPeriods.concat(nonOpeningHoursPeriods));
-            },
-            timeslotSelected : function timeslotSelected(start, end, selfCalendar, jsEvent, view) {
-              var dayPeriods = $scope.editModel.week[dayOfWeek];
-              var period = new qn.domain.LocalTimePeriod({}, dayPeriods);
-              period.setTimes(start, end);
-              dayPeriods.periods.push(period);
-              $scope.selectionModel.selected = period;
-              return period;
-            },
-            sourceEventObjectClicked : $scope.selectionModel.toggleSelected,
-            displayVisitor : displayVisitor,
-            templateUrl : "/partials/roster/roster-calendar-event.html",
-            scope : $scope
-          };
+            // add individual day calendars
+            qn.each($scope.editModel.week, function(regularPeriods, dayOfWeek) {
+              var eventSource = {
+                events : function(start, end, timezone, callback) {
+                  var rosterPeriods = $scope.editModel.week[dayOfWeek].periods;
+                  var nonOpeningHoursPeriods = $scope.openingHours.week[dayOfWeek].inverseDayPeriods;
+                  callback(rosterPeriods.concat(nonOpeningHoursPeriods));
+                },
+                timeslotSelected : function timeslotSelected(start, end, selfCalendar, jsEvent, view) {
+                  var dayPeriods = $scope.editModel.week[dayOfWeek];
+                  var period = new qn.domain.LocalTimePeriod({}, dayPeriods);
+                  period.setTimes(start, end);
+                  dayPeriods.periods.push(period);
+                  $scope.selectionModel.selected = period;
+                  return period;
+                },
+                sourceEventObjectClicked : $scope.selectionModel.toggleSelected,
+                displayVisitor : displayVisitor,
+                templateUrl : "/partials/roster/roster-calendar-event.html",
+                scope : $scope
+              };
 
-          var calendarModel = $scope.calendarModel.addCalendarModel(dayOfWeek, eventSource, {});
-        });
+              var calendarModel = $scope.calendarModel.addCalendarModel(dayOfWeek, eventSource, {});
+            });
 
-        // initialise multi-calendar extremes (done after adding calendars so
-        // value propagates to all.
-        var hoursExtremes = qn.containingPeriod($scope.openingHours.timePeriods.concat($scope.editModel.timePeriods));
-        $scope.calendarModel.setTimeBounds(hoursExtremes);
+            // initialise multi-calendar extremes (done after adding calendars
+            // so
+            // value propagates to all.
+            var hoursExtremes = qn.containingPeriod($scope.openingHours.timePeriods.concat($scope.editModel.timePeriods));
+            $scope.calendarModel.setTimeBounds(hoursExtremes);
 
-        // update calendars from models
-        var refetchEvents = function refetchEvents() {
-          $scope.calendarModel.refetchEvents();
-        }
-        var refetchEventsAndClearSelection = function refetchEventsAndClearSelection() {
-          $scope.selectionModel.clearSelection();
-          refetchEvents();
-        }
-        $scope.editModel.addListener('reset', refetchEventsAndClearSelection);
-        $scope.editModel.addListener('refresh', refetchEventsAndClearSelection);
+            // update calendars from models
+            var refetchEvents = function refetchEvents() {
+              $scope.calendarModel.refetchEvents();
+            }
+            var refetchEventsAndClearSelection = function refetchEventsAndClearSelection() {
+              $scope.selectionModel.clearSelection();
+              refetchEvents();
+            }
+            $scope.editModel.addListener('reset', refetchEventsAndClearSelection);
+            $scope.editModel.addListener('refresh', refetchEventsAndClearSelection);
 
-      } ]);
+          } ]);
 
   module.controller('RosterPeriodController', [
       '$scope',
@@ -229,11 +252,10 @@
           $calendarSelectionModel, $calendarSelectionActions, $rosterPeriodService, rosterPeriod, regularWeek, openingHours) {
 
         /** controller scope model */
-        $scope.editModel = rosterPeriod;
+        $scope.editModel = rosterPeriod.periods;
+        $scope.viewInfo = rosterPeriod;
         $scope.regularWeek = regularWeek;
         $scope.openingHours = openingHours;
-
-
 
         // set display properties from current state
         function displayVisitor(period, calendarEvent) {
@@ -242,6 +264,11 @@
           }
           calendarEvent.color = undefined;
 
+          if (period.parent().getType() == "StaffRegularDayTimePeriods") {
+            calendarEvent.color = $applicationConfig.ui.roster.rosteredTimeSegmentColour;
+            calendarEvent.rendering = 'background';
+            calendarEvent.editable = false;
+          }
           if (period.parent().getType() == "OpeningHoursRegularDayTimePeriods") {
             calendarEvent.color = $applicationConfig.ui.roster.nonBusinessHoursColour;
             calendarEvent.rendering = 'background';
@@ -258,15 +285,35 @@
           }
         }
 
+        var eventOverlap = function(stillEvent, movingEvent) {
+          var stillEventType = stillEvent.parent().getType();
+          var movingEventType = movingEvent.parent().getType();
+          var allow = stillEventType != "RosterPeriodView" || movingEventType != "RosterPeriodView";
+          return allow;
+        }
+
+        var selectOverlap = function(event, calendarEvent) {
+          var eventType = event.parent().getType();
+          var allow = eventType != "OpeningHoursRegularDayTimePeriods" && eventType != "RosterPeriodView";
+          return allow;
+        }
+
         $scope.toggleSelected = function(sourceEvent) {
           return $scope.selectionModel.toggleSelected(sourceEvent);
         }
 
+        var openingHourPeriods = $scope.openingHours.timePeriodsBetween($scope.viewInfo);
+        var nonOpeningHourPeriods = $scope.openingHours.inverseDayPeriodsBetween($scope.viewInfo);
+        var regularWeekPeriods = $scope.regularWeek.timePeriodsBetween($scope.viewInfo);
+        var boundingPeriods = openingHourPeriods.concat(regularWeekPeriods).concat($scope.editModel.timePeriods);
+
         // add a single calendars for the period
         var eventSource = {
           events : function(start, end, timezone, callback) {
-            callback($scope.editModel.timePeriods);
+            callback(nonOpeningHourPeriods.concat(regularWeekPeriods).concat($scope.editModel.timePeriods));
           },
+          eventOverlap : eventOverlap,
+          selectOverlap : selectOverlap,
           timeslotSelected : function timeslotSelected(start, end, selfCalendar, jsEvent, view) {
             var period = new qn.domain.InstantPeriod({}, $scope.editModel);
             period.start = qn.toDate(start);
@@ -283,10 +330,7 @@
 
         // initialise multi-calendar extremes (done after adding calendars so
         // value propagates to all.
-        var hoursExtremes =
-            qn
-                .containingPeriod($scope.openingHours.timePeriods.concat($scope.regularWeek.timePeriods).concat(
-                    $scope.editModel.timePeriods));
+        var hoursExtremes = qn.containingPeriod(boundingPeriods);
         $scope.calendarModel.setTimeBounds(hoursExtremes);
 
         // update calendars from models
@@ -325,7 +369,6 @@
         $calendarSelectionActions.createClearSelectionAction($scope.selectionModel);
         $calendarSelectionActions.createMergeSelectionAction($scope.selectionModel, withSiblings);
         $calendarSelectionActions.createDeleteSelectionAction($scope.selectionModel, withSiblings);
-
 
       } ]);
 
