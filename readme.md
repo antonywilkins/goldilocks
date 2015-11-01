@@ -23,8 +23,11 @@ And of course Goldilocks itself is open source with a [public repository][github
 ### Installation
 ```sh
 $ git clone https://github.com/antonywilkins/goldilocks.git goldilocks
-$ cd goldilocks
+$ cd goldilocks/goldilocks-build
 $ mvn clean install
+$ cd ../goldilocks-app-env-dev
+$ java -Dloader.path=./src/main/resources,lib/ -classpath ./src/main/resources:./target/goldilocks-app-env-dev-0.1.0.jar org.springframework.boot.loader.PropertiesLauncher
+$ 
 ```
 
 
