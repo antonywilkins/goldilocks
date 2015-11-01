@@ -307,7 +307,7 @@
         var regularWeekPeriods = $scope.regularWeek.timePeriodsBetween($scope.viewInfo);
         var boundingPeriods = openingHourPeriods.concat(regularWeekPeriods).concat($scope.editModel.timePeriods);
 
-        // add a single calendars for the period
+        // add the calendar
         var eventSource = {
           events : function(start, end, timezone, callback) {
             callback(nonOpeningHourPeriods.concat(regularWeekPeriods).concat($scope.editModel.timePeriods));
@@ -328,8 +328,7 @@
 
         $scope.calendarModel = $calendarService.createCalendarModel("rosterPeriod", eventSource, {}, "appointments.week");
 
-        // initialise multi-calendar extremes (done after adding calendars so
-        // value propagates to all.
+        // initialise calendar extremes
         var hoursExtremes = qn.longestHours(boundingPeriods);
         $scope.calendarModel.setTimeBounds(hoursExtremes);
 
@@ -344,13 +343,14 @@
         $scope.editModel.addListener('reset', refetchEventsAndClearSelection);
         $scope.editModel.addListener('refresh', refetchEventsAndClearSelection);
 
+        // selection model
         $scope.selectionModel = $calendarSelectionModel({
           calendarModel : $scope.calendarModel,
           allowedSelectionItemFilter : function allowedSelectionItemFilter(period) {
             if (!period) {
               return false;
             }
-            return period.parent().getType() == "StaffRegularDayTimePeriods";
+            return period.parent().getType() == "RosterPeriodView";
           }
         });
 
@@ -364,7 +364,7 @@
           if (!period) {
             return [];
           }
-          return period.parent().periods;
+          return period.parent().overrideWorkingHours;
         }
         $calendarSelectionActions.createClearSelectionAction($scope.selectionModel);
         $calendarSelectionActions.createMergeSelectionAction($scope.selectionModel, withSiblings);
