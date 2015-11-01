@@ -55,9 +55,12 @@
 <h3>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h3>
 
-<div class="highlight highlight-source-shell"><pre>$ git clone [git-repo-url] goldilocks
-$ <span class="pl-c1">cd</span> goldilocks
-$ mvn clean install</pre></div>
+<div class="highlight highlight-source-shell"><pre>$ git clone https://github.com/antonywilkins/goldilocks.git goldilocks
+$ <span class="pl-c1">cd</span> goldilocks/goldilocks-build
+$ mvn clean install
+$ <span class="pl-c1">cd</span> ../goldilocks-app-env-dev
+$ java -Dloader.path=./src/main/resources,lib/ -classpath ./src/main/resources:./target/goldilocks-app-env-dev-0.1.0.jar org.springframework.boot.loader.PropertiesLauncher
+$ </pre></div>
 
 <h3>
 <a id="development" class="anchor" href="#development" aria-hidden="true"><span class="octicon octicon-link"></span></a>Development</h3>
