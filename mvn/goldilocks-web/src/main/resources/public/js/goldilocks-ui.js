@@ -7,7 +7,7 @@
   // *** Directives ***
 
   module.run([ '$keepAlive', function($keepAlive) {
-    $keepAlive(1200);
+    $keepAlive();
   } ]);
 
   module.directive('username', [ '$q', '$userService', function($q, $userService) {
