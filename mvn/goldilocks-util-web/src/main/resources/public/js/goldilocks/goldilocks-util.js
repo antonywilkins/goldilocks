@@ -664,6 +664,45 @@
     return containingPeriod;
   }
 
+  function longestHours(periods) {
+    if (!periods || periods.length == 0) {
+      return;
+    }
+    var containingPeriod = {
+      start : undefined,
+      end : undefined
+    };
+
+    for (var p = 0; p < periods.length; p++) {
+      var period = periods[p];
+      if (period && !period.start) {
+        period = null;
+      }
+      if (period) {
+        var periodStartLocal = toLocalTime(period.start);
+        if (containingPeriod.start) {
+          var containingPeriodStartLocal = toLocalTime(containingPeriod.start).onDate(periodStartLocal.asDate);
+          if (toMoment(containingPeriodStartLocal).isAfter(toMoment(periodStartLocal))) {
+            containingPeriod.start = periodStartLocal;
+          }
+        } else {
+          containingPeriod.start = periodStartLocal;
+        }
+        var periodEndLocal = toLocalTime(period.end);
+        if (containingPeriod.end) {
+          var containingPeriodEndLocal = toLocalTime(containingPeriod.end).onDate(periodEndLocal.asDate);
+          if (toMoment(containingPeriodEndLocal).isBefore(toMoment(periodEndLocal))) {
+            containingPeriod.end = periodEndLocal;
+          }
+        } else {
+          containingPeriod.end = periodEndLocal;
+        }
+      }
+    }
+
+    return containingPeriod;
+  }
+
   function isWindow(obj) {
     return obj && obj.window === obj;
   }
@@ -1770,6 +1809,7 @@
     isTextNumber : isTextNumber,
     isUndefined : isUndefined,
     isUrl : isUrl,
+    longestHours : longestHours,
     lowercase : lowercase,
     mixin : mixin,
     mixinProperty : mixinProperty,

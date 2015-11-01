@@ -330,7 +330,7 @@
 
         // initialise multi-calendar extremes (done after adding calendars so
         // value propagates to all.
-        var hoursExtremes = qn.containingPeriod(boundingPeriods);
+        var hoursExtremes = qn.longestHours(boundingPeriods);
         $scope.calendarModel.setTimeBounds(hoursExtremes);
 
         // update calendars from models
